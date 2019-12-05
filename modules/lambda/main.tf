@@ -21,6 +21,10 @@ resource "aws_lambda_function" "function_lambda" {
   environment {
     variables = var.lambda_environment_variables
   }
+
+  depends_on = [
+    aws_iam_role.function_lambda_role
+  ]
 }
 
 resource "aws_lambda_permission" "function_lambda_permission" {
@@ -79,7 +83,7 @@ resource "aws_iam_role_policy_attachment" "function_lambda_vpc_attachment" {
   count      = length(var.lambda_vpc_subnets) > 0 ? 1 : 0
 
   role       = aws_iam_role.function_lambda_role.name
-  policy_arn = "arn:aws:iam::aws:policy/function-role/AWSLambdaVPCAccessExecutionRole"
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
 
   depends_on = [
     aws_iam_role.function_lambda_role
