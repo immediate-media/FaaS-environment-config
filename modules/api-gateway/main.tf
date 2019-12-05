@@ -88,7 +88,7 @@ resource "aws_api_gateway_method_settings" "logging" {
 
 ## Cloud Watch Logs ##
 resource "aws_api_gateway_account" "function_account_settings" {
-  cloudwatch_role_arn = "${aws_iam_role.api_gateway_cloudwatch_logs.arn}"
+  cloudwatch_role_arn = aws_iam_role.api_gateway_cloudwatch_logs.arn
 }
 
 resource "aws_iam_role" "api_gateway_cloudwatch_logs" {

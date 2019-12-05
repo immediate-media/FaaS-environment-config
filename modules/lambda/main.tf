@@ -29,6 +29,10 @@ resource "aws_lambda_permission" "function_lambda_permission" {
   function_name = aws_lambda_function.function_lambda.function_name
   principal     = "apigateway.amazonaws.com"
   source_arn    = var.source_arn
+
+  depends_on = [
+    aws_lambda_function.function_lambda
+  ]
 }
 
 # IAM role which dictates what other AWS services the Lambda function
@@ -48,6 +52,10 @@ resource "aws_cloudwatch_log_group" "function_lambda_logs" {
     Platform    = var.platform
     Environment = var.environment
   }
+
+  depends_on = [
+    aws_lambda_function.function_lambda
+  ]
 }
 
 resource "aws_iam_policy" "function_lambda_log_policy" {
@@ -60,11 +68,20 @@ resource "aws_iam_policy" "function_lambda_log_policy" {
 resource "aws_iam_role_policy_attachment" "function_lambda_log_attachment" {
   role       = aws_iam_role.function_lambda_role.name
   policy_arn = aws_iam_policy.function_lambda_log_policy.arn
+
+  depends_on = [
+    aws_iam_role.function_lambda_role,
+    aws_iam_policy.function_lambda_log_policy
+  ]
 }
 
 resource "aws_iam_role_policy_attachment" "function_lambda_vpc_attachment" {
   role       = aws_iam_role.function_lambda_role.name
   policy_arn = "arn:aws:iam::aws:policy/function-role/AWSLambdaVPCAccessExecutionRole"
+
+  depends_on = [
+    aws_iam_role.function_lambda_role
+  ]
 }
 
 
