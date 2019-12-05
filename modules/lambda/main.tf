@@ -76,7 +76,7 @@ resource "aws_iam_role_policy_attachment" "function_lambda_log_attachment" {
 }
 
 resource "aws_iam_role_policy_attachment" "function_lambda_vpc_attachment" {
-  count      = var.lambda_vpc_subnets != [] ? 1 : 0
+  count      = length(var.lambda_vpc_subnets) > 0 ? 1 : 0
 
   role       = aws_iam_role.function_lambda_role.name
   policy_arn = "arn:aws:iam::aws:policy/function-role/AWSLambdaVPCAccessExecutionRole"
