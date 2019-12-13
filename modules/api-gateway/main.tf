@@ -21,7 +21,9 @@ resource "aws_api_gateway_method" "function_method" {
   authorization = "NONE"
 }
 
-resource "aws_api_gateway_integration" "lambda" {
+resource "aws_api_gateway_integration" "lambda_convert" {
+  count = var.api_gateway_content_handling != "" ? 1 : 0
+
   rest_api_id = aws_api_gateway_rest_api.function_api.id
   resource_id = aws_api_gateway_resource.function_api_resource.id
   http_method = aws_api_gateway_method.function_method.http_method
@@ -30,6 +32,18 @@ resource "aws_api_gateway_integration" "lambda" {
   type                    = "AWS_PROXY"
   uri                     = var.lambda_invoke_uri
   content_handling        = var.api_gateway_content_handling
+}
+
+resource "aws_api_gateway_integration" "lambda" {
+  count = var.api_gateway_content_handling != "" ? 0 : 1
+
+  rest_api_id = aws_api_gateway_rest_api.function_api.id
+  resource_id = aws_api_gateway_resource.function_api_resource.id
+  http_method = aws_api_gateway_method.function_method.http_method
+
+  integration_http_method = "POST"
+  type                    = "AWS_PROXY"
+  uri                     = var.lambda_invoke_uri
 }
 
 resource "aws_api_gateway_method_response" "ok" {
@@ -50,7 +64,8 @@ resource "aws_api_gateway_integration_response" "lambda_response" {
   }
 
   depends_on  = [
-    aws_api_gateway_integration.lambda
+    aws_api_gateway_integration.lambda,
+    aws_api_gateway_integration.lambda_convert
   ]
 }
 
@@ -66,7 +81,8 @@ resource "aws_api_gateway_deployment" "function_deployment" {
 
   depends_on = [
     aws_api_gateway_method.function_method,
-    aws_api_gateway_integration.lambda
+    aws_api_gateway_integration.lambda,
+    aws_api_gateway_integration.lambda_convert
   ]
 }
 
