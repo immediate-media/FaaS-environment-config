@@ -29,6 +29,7 @@ resource "aws_api_gateway_integration" "lambda" {
   integration_http_method = "POST"
   type                    = "AWS_PROXY"
   uri                     = var.lambda_invoke_uri
+  content_handling        = var.api_gateway_content_handling
 }
 
 resource "aws_api_gateway_method_response" "ok" {

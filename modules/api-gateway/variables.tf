@@ -21,3 +21,7 @@ variable "environment" {
 variable "lambda_invoke_uri" {
   description = "The lambda URI that API GAteway should invoke"
 }
+
+variable "api_gateway_content_handling" {
+  description = "Specifies how to handle request payload content type conversions."
+}

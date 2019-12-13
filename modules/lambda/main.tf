@@ -7,6 +7,7 @@ resource "aws_lambda_function" "function_lambda" {
   function_name    = "${var.function_prefix}-${var.environment}-lambda"
   s3_bucket        = var.s3_bucket_name
   s3_key           = var.lambda_package
+  source_code_hash = filebase64sha256(var.lambda_package)
   memory_size      = var.lambda_memory
   timeout          = var.lambda_timeout
   handler          = var.lambda_handler
