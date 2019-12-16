@@ -72,6 +72,12 @@ variable "lambda_environment_variables" {
   default     = {}
 }
 
+variable "api_gateway_content_handling" {
+  type        = string
+  description = "Specifies how to handle request payload content type conversions."
+  default     = ""
+}
+
 variable "log_retention" {
   type        = number
   description = "The number of days to retain logs for in cloudwatch"
