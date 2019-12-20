@@ -3,11 +3,15 @@ provider "aws" {
   region  = var.region
 }
 
+data "aws_s3_bucket_object" "lambda_package" {
+  bucket = var.s3_bucket_name
+  key    = var.lambda_package
+}
+
 resource "aws_lambda_function" "function_lambda" {
   function_name    = "${var.function_prefix}-${var.environment}-lambda"
-  s3_bucket        = var.s3_bucket_name
-  s3_key           = var.lambda_package
-  source_code_hash = filebase64sha256(var.lambda_package)
+  s3_bucket        = data.aws_s3_bucket_object.lambda_package.bucket
+  s3_key           = data.aws_s3_bucket_object.lambda_package.key
   memory_size      = var.lambda_memory
   timeout          = var.lambda_timeout
   handler          = var.lambda_handler
