@@ -57,4 +57,5 @@ module "api_gateway" {
   environment                  = var.environment
 
   lambda_invoke_uri            = module.lambda.lambda_invoke_uri
+  api_gateway_content_handling = var.api_gateway_content_handling
 }

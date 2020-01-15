@@ -3,10 +3,15 @@ provider "aws" {
   region  = var.region
 }
 
+data "aws_s3_bucket_object" "lambda_package" {
+  bucket = var.s3_bucket_name
+  key    = var.lambda_package
+}
+
 resource "aws_lambda_function" "function_lambda" {
   function_name    = "${var.function_prefix}-${var.environment}-lambda"
-  s3_bucket        = var.s3_bucket_name
-  s3_key           = var.lambda_package
+  s3_bucket        = data.aws_s3_bucket_object.lambda_package.bucket
+  s3_key           = data.aws_s3_bucket_object.lambda_package.key
   memory_size      = var.lambda_memory
   timeout          = var.lambda_timeout
   handler          = var.lambda_handler
@@ -21,6 +26,10 @@ resource "aws_lambda_function" "function_lambda" {
   environment {
     variables = var.lambda_environment_variables
   }
+
+  depends_on = [
+    aws_iam_role.function_lambda_role
+  ]
 }
 
 resource "aws_lambda_permission" "function_lambda_permission" {
@@ -29,6 +38,10 @@ resource "aws_lambda_permission" "function_lambda_permission" {
   function_name = aws_lambda_function.function_lambda.function_name
   principal     = "apigateway.amazonaws.com"
   source_arn    = var.source_arn
+
+  depends_on = [
+    aws_lambda_function.function_lambda
+  ]
 }
 
 # IAM role which dictates what other AWS services the Lambda function
@@ -48,6 +61,10 @@ resource "aws_cloudwatch_log_group" "function_lambda_logs" {
     Platform    = var.platform
     Environment = var.environment
   }
+
+  depends_on = [
+    aws_lambda_function.function_lambda
+  ]
 }
 
 resource "aws_iam_policy" "function_lambda_log_policy" {
@@ -60,11 +77,22 @@ resource "aws_iam_policy" "function_lambda_log_policy" {
 resource "aws_iam_role_policy_attachment" "function_lambda_log_attachment" {
   role       = aws_iam_role.function_lambda_role.name
   policy_arn = aws_iam_policy.function_lambda_log_policy.arn
+
+  depends_on = [
+    aws_iam_role.function_lambda_role,
+    aws_iam_policy.function_lambda_log_policy
+  ]
 }
 
 resource "aws_iam_role_policy_attachment" "function_lambda_vpc_attachment" {
+  count      = length(var.lambda_vpc_subnets) > 0 ? 1 : 0
+
   role       = aws_iam_role.function_lambda_role.name
-  policy_arn = "arn:aws:iam::aws:policy/function-role/AWSLambdaVPCAccessExecutionRole"
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
+
+  depends_on = [
+    aws_iam_role.function_lambda_role
+  ]
 }
 
 
