@@ -72,6 +72,30 @@ variable "lambda_environment_variables" {
   default     = {}
 }
 
+variable "api_gateway_endpoint_configuration" {
+  type        = list
+  description = "A list of endpoint types. This resource currently only supports managing a single value. Valid values: EDGE, REGIONAL or PRIVATE."
+  default     = ["EDGE"]
+}
+
+variable "api_gateway_api_key_source" {
+  type        = string
+  description = "The source of the API key for requests."
+  default     = "HEADER"
+}
+
+variable "api_gateway_minimum_compression_size" {
+  type        = number
+  description = "Minimum response size to compress for the REST API. Integer between -1 and 10485760."
+  default     = -1
+}
+
+variable "api_gateway_binary_media_types" {
+  type        = list
+  description = "The list of binary media types supported by the RestApi."
+  default     = []
+}
+
 variable "api_gateway_content_handling" {
   type        = string
   description = "Specifies how to handle request payload content type conversions."

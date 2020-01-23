@@ -4,8 +4,16 @@ provider "aws" {
 }
 
 resource "aws_api_gateway_rest_api" "function_api" {
-  name        = "${var.function_prefix}-${var.environment}-api"
-  description = "API for accessing the Lambda function"
+  name                     = "${var.function_prefix}-${var.environment}-api"
+  description              = "API for accessing the Lambda function"
+
+  api_key_source           = var.api_gateway_api_key_source
+  minimum_compression_size = var.api_gateway_minimum_compression_size
+  binary_media_types       = var.api_gateway_binary_media_types
+
+  endpoint_configuration {
+    types = var.api_gateway_endpoint_configuration
+  }
 }
 
 resource "aws_api_gateway_resource" "function_api_resource" {

@@ -49,13 +49,17 @@ module "lambda" {
 ###################
 
 module "api_gateway" {
-  source                       = "./modules/api-gateway"
-  function_name                = var.function_name
-  function_prefix              = var.function_prefix
-  platform                     = var.platform
-  region                       = var.region
-  environment                  = var.environment
+  source                                   = "./modules/api-gateway"
+  function_name                            = var.function_name
+  function_prefix                          = var.function_prefix
+  platform                                 = var.platform
+  region                                   = var.region
+  environment                              = var.environment
 
-  lambda_invoke_uri            = module.lambda.lambda_invoke_uri
-  api_gateway_content_handling = var.api_gateway_content_handling
+  api_gateway_endpoint_configuration       = var.api_gateway_endpoint_configuration
+  api_gateway_api_key_source               = var.api_gateway_api_key_source
+  api_gateway_minimum_compression_size     = var.api_gateway_minimum_compression_size
+  api_gateway_binary_media_types           = var.api_gateway_binary_media_types
+  api_gateway_content_handling             = var.api_gateway_content_handling
+  lambda_invoke_uri                        = module.lambda.lambda_invoke_uri
 }
