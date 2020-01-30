@@ -8,6 +8,17 @@ variable "function_prefix" {
   description = "Identifier for function used to prefix resource names"
 }
 
+variable "aws_account_number" {
+  type        = number
+  description = "The AWS account number for the account to build resources in"
+}
+
+variable "region" {
+  type        = string
+  description = "The AWS Region to create the lambda function in"
+  default     = "eu-west-1"
+}
+
 variable "platform" {
   type        = string
   description = "Platform identifier."
@@ -18,92 +29,69 @@ variable "environment" {
   description = "Environment name"
 }
 
-variable "region" {
+variable "environment_image" {
   type        = string
-  description = "The AWS Region to create the lambda function in"
-  default     = "eu-west-1"
+  description = "Which Docker image to use as your build environment"
 }
 
-variable "lambda_runtime" {
-  type        = string
-  description = "Version of nodejs to use when running tachyon"
-  default     = "nodejs10.x"
+variable "environment_variables" {
+  description = "A list of all the environment variables to be passed as key/value pairs"
+  type        = list(object({
+    name      = string
+    value     = string
+  }))
 }
 
-variable "lambda_package" {
+variable "base_os_image" {
+  description = "Which base OS to run Docker on"
+}
+
+variable "github_base_url" {
   type        = string
-  description = "Name of the zip file you wish to deploy with path"
+  description = "The base url for GitHub"
+  default     = "https://github.com/"
+}
+
+variable "github_auth_token" {
+  type        = string
+  description = "The authentication token for github"
+}
+
+variable "github_organization" {
+  type        = string
+  description = "You GitHub organisation"
+}
+
+variable "github_repo" {
+  type        = string
+  description = "The GitHub repo to source the codebase for you function from"
+}
+
+variable "github_branch" {
+  type        = string
+  description = "The branch of the repo that should trigger the webhook"
+  default     = "master"
+}
+
+variable "webhook_secret" {
+  type        = string
+  description = "The secret for the GitHub webhook"
+}
+
+variable "webhook_ip_range" {
+  type        = string
+  description = "A list of IPs allowed to trigger the webhook"
   default     = ""
 }
 
-variable "lambda_handler" {
+variable "use_api_auth" {
+  type        = bool
+  description = "Whether to add authentication to API gateway with Secrets Manager"
+  default     = false
+}
+
+variable "api_auth_token" {
   type        = string
-  description = "The handler to access the Lambda function with"
-  default     = "lambda.handler"
-}
-
-variable "lambda_memory" {
-  type        = number
-  description = "The amount of memory to give the Lambda function"
-  default     = 512
-}
-
-variable "lambda_timeout" {
-  type        = number
-  description = "The amount of time your Lambda Function has to run in seconds"
-  default     = 10
-}
-
-variable "lambda_vpc_subnets" {
-  type        = list
-  description = "A list of subnet IDs associated with the Lambda function"
-  default     = []
-}
-
-variable "lambda_security_groups" {
-  type        = list
-  description = "A list of security group IDs associated with the Lambda function"
-  default     = []
-}
-
-variable "lambda_environment_variables" {
-  type        = map(any)
-  description = "A map of all the environment variables to be passed to your Lambda function"
-  default     = {}
-}
-
-variable "api_gateway_endpoint_configuration" {
-  type        = list
-  description = "A list of endpoint types. This resource currently only supports managing a single value. Valid values: EDGE, REGIONAL or PRIVATE."
-  default     = ["EDGE"]
-}
-
-variable "api_gateway_api_key_source" {
-  type        = string
-  description = "The source of the API key for requests."
-  default     = "HEADER"
-}
-
-variable "api_gateway_minimum_compression_size" {
-  type        = number
-  description = "Minimum response size to compress for the REST API. Integer between -1 and 10485760."
-  default     = -1
-}
-
-variable "api_gateway_binary_media_types" {
-  type        = list
-  description = "The list of binary media types supported by the RestApi."
-  default     = []
-}
-
-variable "api_gateway_content_handling" {
-  type        = string
-  description = "Specifies how to handle request payload content type conversions."
+  description = "The value of the API authentication key"
   default     = ""
-}
-
-variable "log_retention" {
-  type        = number
-  description = "The number of days to retain logs for in cloudwatch"
-  default     = 7
 }

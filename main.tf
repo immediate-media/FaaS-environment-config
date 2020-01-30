@@ -11,55 +11,67 @@ module "s3" {
   source                       = "./modules/s3"
   function_name                = var.function_name
   function_prefix              = var.function_prefix
+  region                       = var.region
   platform                     = var.platform
   environment                  = var.environment
-  region                       = var.region
-  lambda_package               = var.lambda_package
 }
 
-##############
-### Lambda ###
-##############
+#################
+### CodeBuild ###
+#################
 
-module "lambda" {
-  source                       = "./modules/lambda"
+module "codebuild" {
+  source                       = "./modules/codebuild"
   function_name                = var.function_name
   function_prefix              = var.function_prefix
-  platform                     = var.platform
+  aws_account_number           = var.aws_account_number
   region                       = var.region
+  platform                     = var.platform
   environment                  = var.environment
 
-  lambda_runtime               = var.lambda_runtime
-  lambda_package               = "${var.lambda_package != "" ? var.lambda_package : module.s3.s3_dummy_package}"
-  lambda_handler               = var.lambda_handler
-  lambda_memory                = var.lambda_memory
-  lambda_timeout               = var.lambda_timeout
-  lambda_vpc_subnets           = var.lambda_vpc_subnets
-  lambda_security_groups       = var.lambda_security_groups
-  lambda_environment_variables = var.lambda_environment_variables
+  environment_image            = var.environment_image
+  base_os_image                = var.base_os_image
+  environment_variables        = var.environment_variables
+  use_api_auth                 = var.use_api_auth
 
-  log_retention                = var.log_retention
-
-  s3_bucket_name               = module.s3.s3_bucket_name
-  source_arn                   = "${module.api_gateway.execution_arn}/*/*/*"
+  kms_key_arn                  = module.ssm.kms_key_arn
 }
 
-###################
-### API Gateway ###
-###################
+####################
+### CodePipeline ###
+####################
 
-module "api_gateway" {
-  source                                   = "./modules/api-gateway"
-  function_name                            = var.function_name
-  function_prefix                          = var.function_prefix
-  platform                                 = var.platform
-  region                                   = var.region
-  environment                              = var.environment
+module "codepipeline" {
+  source                       = "./modules/codepipeline"
+  function_name                = var.function_name
+  function_prefix              = var.function_prefix
+  region                       = var.region
+  platform                     = var.platform
+  environment                  = var.environment
 
-  api_gateway_endpoint_configuration       = var.api_gateway_endpoint_configuration
-  api_gateway_api_key_source               = var.api_gateway_api_key_source
-  api_gateway_minimum_compression_size     = var.api_gateway_minimum_compression_size
-  api_gateway_binary_media_types           = var.api_gateway_binary_media_types
-  api_gateway_content_handling             = var.api_gateway_content_handling
-  lambda_invoke_uri                        = module.lambda.lambda_invoke_uri
+  github_base_url              = var.github_base_url
+  github_auth_token            = var.github_auth_token
+  github_organization          = var.github_organization
+  github_repo                  = var.github_repo
+  github_branch                = var.github_branch
+  webhook_ip_range             = var.webhook_ip_range
+  webhook_secret               = var.webhook_secret
+
+  s3_source_bucket_id          = module.s3.s3_source_bucket_id
+  s3_source_bucket_arn         = module.s3.s3_source_bucket_arn
+}
+
+###########
+### SSM ###
+###########
+
+module "ssm" {
+  source                       = "./modules/ssm"
+  function_name                = var.function_name
+  function_prefix              = var.function_prefix
+  region                       = var.region
+  platform                     = var.platform
+  environment                  = var.environment
+
+  api_auth_token               = var.api_auth_token
 }
