@@ -32,6 +32,7 @@ variable "environment" {
 variable "environment_image" {
   type        = string
   description = "Which Docker image to use as your build environment"
+  default     = "aws/codebuild/amazonlinux2-x86_64-standard:2.0"
 }
 
 variable "environment_variables" {
@@ -43,7 +44,9 @@ variable "environment_variables" {
 }
 
 variable "base_os_image" {
+  type        = string
   description = "Which base OS to run Docker on"
+  default     = "LINUX_CONTAINER"
 }
 
 variable "github_base_url" {
