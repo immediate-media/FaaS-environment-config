@@ -8,7 +8,7 @@
         "ssm:GetParameters"
       ],
       "Resource" : [
-        "arn:aws:ssm:${region}:${aws_account_number}:parameter/${function_prefix}/${environment}/rest-api-key"
+        "arn:aws:ssm:${region}:${aws_account_number}:parameter/${function_prefix}-${environment}-rest-api-key"
       ]
     },
     {
