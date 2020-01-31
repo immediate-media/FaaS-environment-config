@@ -52,7 +52,7 @@ resource "aws_codebuild_project" "codebuild_project" {
 
   cache {
     type     = "S3"
-    location = "${var.function_prefix}-${var.environment}-codebuild-bucket"
+    location = "${var.function_prefix}-${var.environment}-codebuild-cache"
   }
 
   environment {
