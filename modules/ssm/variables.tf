@@ -17,3 +17,7 @@ variable "platform" {
 variable "environment" {
   description = "Environment name"
 }
+
+variable "api_auth_token" {
+  description = "The value of the API authentication key"
+}
