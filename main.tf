@@ -3,6 +3,14 @@ provider "aws" {
   region  = var.region
 }
 
+module "lambda" {
+  source = "./modules/lambda"
+}
+
+module "api-gateway" {
+  source = "./modules/api-gateway"
+}
+
 ##########
 ### S3 ###
 ##########
