@@ -3,6 +3,10 @@ provider "aws" {
   region  = var.region
 }
 
+provider "archive" {
+    version = "~> 1.2"
+}
+
 resource "aws_s3_bucket" "function_codepipeline_source_packages" {
   bucket = "${var.function_prefix}-${var.environment}-codepipeline-source-packages"
   acl    = "private"
