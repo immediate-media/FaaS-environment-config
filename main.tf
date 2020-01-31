@@ -7,7 +7,7 @@ module "lambda" {
   source = "./modules/lambda"
 }
 
-module "api-gateway" {
+module "api_gateway" {
   source = "./modules/api-gateway"
 }
 
