@@ -73,5 +73,6 @@ resource "aws_codebuild_project" "codebuild_project" {
 
   source {
     type = "CODEPIPELINE"
+    buildspec = var.buildspec_name
   }
 }

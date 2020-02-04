@@ -45,3 +45,7 @@ variable "use_api_auth" {
 variable "kms_key_arn" {
   description = "The key used for decrypting secrets from secrets manager"
 }
+
+variable "buildspec_name" {
+  description = "The Buildspec file name - usually buildspec.yml"
+}

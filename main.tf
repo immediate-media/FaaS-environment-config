@@ -33,6 +33,7 @@ module "codebuild" {
   base_os_image                = var.base_os_image
   environment_variables        = var.environment_variables
   use_api_auth                 = var.use_api_auth
+  buildspec_name               = var.buildspec_name
 
   kms_key_arn                  = module.ssm.kms_key_arn
 }

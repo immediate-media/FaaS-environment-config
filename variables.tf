@@ -49,6 +49,12 @@ variable "base_os_image" {
   default     = "LINUX_CONTAINER"
 }
 
+variable "buildspec_name" {
+  type        = string
+  description = "The Buildspec file name - usually buildspec.yml"
+  default     = "buildspec.yml"
+}
+
 variable "github_base_url" {
   type        = string
   description = "The base url for GitHub"
