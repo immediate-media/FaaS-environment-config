@@ -18,7 +18,7 @@ resource "aws_iam_role_policy" "pipeline_policy" {
   name = "${var.function_prefix}-${var.environment}-pipeline-policy"
   role = aws_iam_role.codepipeline_role.id
   policy = templatefile("${path.module}/codepipeline-policy-template.json", {
-      s3_source_bucket_arn = var.s3_source_bucket_arn
+      s3_source_bucket_arn = aws_s3_bucket.function_codepipeline_source_packages.arn
   })
 }
 
@@ -61,6 +61,18 @@ resource "github_repository_webhook" "github_webhook" {
   events = ["push"]
 }
 
+# CodePipeline Source Bucket
+resource "aws_s3_bucket" "function_codepipeline_source_packages" {
+  bucket = "${var.function_prefix}-${var.environment}-codepipeline-source-packages"
+  acl    = "private"
+
+  tags = {
+    Name        = "${var.function_name} ${var.environment} CodePipeline source packages"
+    Platform    = var.platform
+    Environment = var.environment
+  }
+}
+
 # CodePipeline Project
 resource "aws_codepipeline" "codepipeline_project" {
   name     = "${var.function_prefix}-${var.environment}-codepipeline"
@@ -68,7 +80,7 @@ resource "aws_codepipeline" "codepipeline_project" {
 
   # Store codepipeline artifacts in the custom S3 bucket
   artifact_store {
-    location = var.s3_source_bucket_id
+    location = aws_s3_bucket.function_codepipeline_source_packages.id
     type     = "S3"
   }
 

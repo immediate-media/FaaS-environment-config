@@ -6,7 +6,6 @@ provider "aws" {
 resource "aws_s3_bucket" "function_codepipeline_source_packages" {
   bucket = "${var.function_prefix}-${var.environment}-codepipeline-source-packages"
   acl    = "private"
-  count  = var.use_codepipeline_bucket ? 1 : 0
 
   tags = {
     Name        = "${var.function_name} ${var.environment} CodePipeline source packages"

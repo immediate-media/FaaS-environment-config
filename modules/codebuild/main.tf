@@ -41,6 +41,18 @@ resource "aws_iam_role_policy" "codebuild_policy_3" {
   })
 }
 
+# CodeBuild Cache Bucket
+resource "aws_s3_bucket" "function_codebuild_cache" {
+  bucket = "${var.function_prefix}-${var.environment}-codebuild-cache"
+  acl    = "private"
+
+  tags = {
+    Name        = "${var.function_name} ${var.environment} CodeBuild cache"
+    Platform    = var.platform
+    Environment = var.environment
+  }
+}
+
 # CodeBuild Project
 resource "aws_codebuild_project" "codebuild_project" {
   name         = "${var.function_prefix}-${var.environment}-codebuild-project"
@@ -52,7 +64,7 @@ resource "aws_codebuild_project" "codebuild_project" {
 
   cache {
     type     = "S3"
-    location = "${var.function_prefix}-${var.environment}-codebuild-cache"
+    location = aws_s3_bucket.function_codebuild_cache.id
   }
 
   environment {
