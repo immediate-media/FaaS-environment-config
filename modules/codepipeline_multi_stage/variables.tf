@@ -18,14 +18,6 @@ variable "environment" {
   description = "Environment name"
 }
 
-variable "s3_source_bucket_id" {
-  description = "Name of the S3 bucket to source the build artifact from"
-}
-
-variable "s3_source_bucket_arn" {
-  description = "The ARN of the S3 bucket to source the build artifact from"
-}
-
 variable "github_base_url" {
   description = "The base url for GitHub"
 }

@@ -78,9 +78,6 @@ module "codepipeline_ms" {
   github_branch                = var.github_branch
   webhook_ip_range             = var.webhook_ip_range
   webhook_secret               = var.webhook_secret
-
-  s3_source_bucket_id          = module.s3.s3_source_bucket_id
-  s3_source_bucket_arn         = module.s3.s3_source_bucket_arn
 }
 
 ###########
