@@ -14,6 +14,7 @@ module "s3" {
   region                       = var.region
   platform                     = var.platform
   environment                  = var.environment
+  use_codepipeline_bucket      = var.use_codepipeline_bucket
 }
 
 #################

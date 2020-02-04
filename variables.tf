@@ -104,3 +104,9 @@ variable "api_auth_token" {
   description = "The value of the API authentication key"
   default     = ""
 }
+
+variable "use_codepipeline_bucket" {
+  type        = bool
+  description = "Whether or not you require the codepipeline bucket numerous times - if you just require another codebuild cache bucket - specifiy false"
+  default     = true
+}
