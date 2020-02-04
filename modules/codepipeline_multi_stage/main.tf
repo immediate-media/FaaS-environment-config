@@ -115,10 +115,10 @@ resource "aws_codepipeline" "codepipeline_project" {
 
   # Build environment & Deploy Staging
   stage {
-    name = "Build & Deploy Staging"
+    name = "Build-Deploy-Staging"
 
     action {
-      name             = "Build & Deploy Staging"
+      name             = "Build-Deploy-Staging"
       category         = "Build"
       owner            = "AWS"
       provider         = "CodeBuild"
@@ -135,10 +135,10 @@ resource "aws_codepipeline" "codepipeline_project" {
 
   # Integration Tests
   stage {
-    name = "Integration Tests"
+    name = "Integration-Tests"
 
     action {
-      name             = "Integration Tests"
+      name             = "Integration-Tests"
       category         = "Build"
       owner            = "AWS"
       provider         = "CodeBuild"
@@ -155,10 +155,10 @@ resource "aws_codepipeline" "codepipeline_project" {
 
   # Build environment & Deploy Pre Prod
   stage {
-    name = "Build & Deploy Pre Prod"
+    name = "Build-Deploy-PreProd"
 
     action {
-      name             = "Build & Deploy Pre Production"
+      name             = "Build-Deploy-PreProduction"
       category         = "Build"
       owner            = "AWS"
       provider         = "CodeBuild"
@@ -175,10 +175,10 @@ resource "aws_codepipeline" "codepipeline_project" {
 
   # Integration Tests II
   stage {
-    name = "Integration Tests II"
+    name = "Integration-Tests-II"
 
     action {
-      name             = "Integration Tests II"
+      name             = "Integration-Tests-II"
       category         = "Build"
       owner            = "AWS"
       provider         = "CodeBuild"
@@ -195,10 +195,10 @@ resource "aws_codepipeline" "codepipeline_project" {
 
   # Build environment & Deploy Production - manual approval
   stage {
-    name = "Build & Deploy Production"
+    name = "Build-Deploy-Production"
 
     action {
-      name      = "Approval Stage"
+      name      = "Approval-Stage"
       category  = "Approval"
       owner     = "AWS"
       provider  = "Manual"
@@ -207,7 +207,7 @@ resource "aws_codepipeline" "codepipeline_project" {
     }
 
     action {
-      name             = "Build & Deploy Production"
+      name             = "Build-Deploy-Production"
       category         = "Build"
       owner            = "AWS"
       provider         = "CodeBuild"
