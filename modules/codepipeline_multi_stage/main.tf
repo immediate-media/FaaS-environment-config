@@ -103,7 +103,6 @@ resource "aws_codepipeline" "codepipeline_project" {
       owner            = "AWS"
       provider         = "CodeBuild"
       input_artifacts  = ["source_output"]
-      output_artifacts = ["build_output"]
       version          = "1"
 
       configuration = {
@@ -143,7 +142,6 @@ resource "aws_codepipeline" "codepipeline_project" {
       owner            = "AWS"
       provider         = "CodeBuild"
       input_artifacts  = ["source_output"]
-      output_artifacts = ["build_output"]
       version          = "1"
 
       configuration = {
@@ -162,8 +160,8 @@ resource "aws_codepipeline" "codepipeline_project" {
       category         = "Build"
       owner            = "AWS"
       provider         = "CodeBuild"
-      input_artifacts  = ["source_output"]
-      output_artifacts = ["build_output"]
+      input_artifacts  = ["build_output"]
+      output_artifacts = ["build_output_1"]
       version          = "1"
 
       configuration = {
@@ -183,7 +181,6 @@ resource "aws_codepipeline" "codepipeline_project" {
       owner            = "AWS"
       provider         = "CodeBuild"
       input_artifacts  = ["source_output"]
-      output_artifacts = ["build_output"]
       version          = "1"
 
       configuration = {
@@ -211,8 +208,7 @@ resource "aws_codepipeline" "codepipeline_project" {
       category         = "Build"
       owner            = "AWS"
       provider         = "CodeBuild"
-      input_artifacts  = ["source_output"]
-      output_artifacts = ["build_output"]
+      input_artifacts  = ["build_output_1"]
       version          = "1"
 
       configuration = {
