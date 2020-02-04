@@ -61,6 +61,26 @@ module "codepipeline" {
   s3_source_bucket_arn         = module.s3.s3_source_bucket_arn
 }
 
+module "codepipeline_ms" {
+  source                       = "./modules/codepipeline_multi_stage"
+  function_name                = var.function_name
+  function_prefix              = var.function_prefix
+  region                       = var.region
+  platform                     = var.platform
+  environment                  = var.environment
+
+  github_base_url              = var.github_base_url
+  github_auth_token            = var.github_auth_token
+  github_organization          = var.github_organization
+  github_repo                  = var.github_repo
+  github_branch                = var.github_branch
+  webhook_ip_range             = var.webhook_ip_range
+  webhook_secret               = var.webhook_secret
+
+  s3_source_bucket_id          = module.s3.s3_source_bucket_id
+  s3_source_bucket_arn         = module.s3.s3_source_bucket_arn
+}
+
 ###########
 ### SSM ###
 ###########
