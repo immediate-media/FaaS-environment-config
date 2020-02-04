@@ -64,7 +64,7 @@ resource "aws_codebuild_project" "codebuild_project" {
 
   cache {
     type     = "S3"
-    location = aws_s3_bucket.function_codebuild_cache.id
+    location = "${var.function_prefix}-${var.environment}-codebuild-cache"
   }
 
   environment {
