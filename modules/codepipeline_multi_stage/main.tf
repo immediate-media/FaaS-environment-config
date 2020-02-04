@@ -198,6 +198,15 @@ resource "aws_codepipeline" "codepipeline_project" {
     name = "Build & Deploy Production"
 
     action {
+      name      = "Approval Stage"
+      category  = "Approval"
+      owner     = "AWS"
+      provider  = "Manual"
+      run_order = 1
+      version   = "1"
+    }
+
+    action {
       name             = "Build & Deploy Production"
       category         = "Build"
       owner            = "AWS"
