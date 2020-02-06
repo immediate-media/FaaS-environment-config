@@ -18,7 +18,7 @@ resource "aws_iam_role" "codebuild_role_2" {
   name               = "${var.function_prefix}-${var.environment}-remote-codebuild-role"
   assume_role_policy = templatefile("${path.module}/codebuild-remote-cross-account-template.json", {
     aws_account_number = var.aws_account_number,
-    local_account_role = aws_iam_role.codebuild_role.id
+    local_account_role = "${var.function_prefix}-${var.environment}-codebuild-role"
     })
   count              = var.create_remote_role ? 1 : 0
 }
