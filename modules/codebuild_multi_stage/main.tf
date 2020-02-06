@@ -69,6 +69,7 @@ resource "aws_iam_role_policy" "codebuild_policy_5" {
   name   = "${var.function_prefix}-${var.environment}-cross-account-codebuild-serverless-policy"
   role   = "${var.function_prefix}-${var.environment}-cross-account-codebuild-role"
   policy = file("${path.module}/serverless-role-policy-template.json")
+  count              = var.use_cross_account ? 1 : 0
 }
 
 # CodeBuild Cache Bucket
