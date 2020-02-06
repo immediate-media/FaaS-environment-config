@@ -137,5 +137,4 @@ module "iam" {
   region                       = var.region
   environment                  = var.environment
   aws_account_number           = var.aws_account_number
-  remote_account_id            = var.remote_account_id
 }
