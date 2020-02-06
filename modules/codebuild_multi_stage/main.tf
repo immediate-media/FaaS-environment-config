@@ -16,7 +16,7 @@ resource "aws_iam_role" "codebuild_role" {
 resource "aws_iam_role" "codebuild_role_2" {
   provider = aws.remote_account
   name               = "${var.function_prefix}-${var.environment}-cross-account-codebuild-role"
-  assume_role_policy = file("${path.module}/codebuild-remote-cross-account-template.json", {
+  assume_role_policy = templatefile("${path.module}/codebuild-remote-cross-account-template.json", {
     aws_account_number = var.aws_account_number,
     local_account_role = aws_iam_role.codebuild_role.id
     })
@@ -60,7 +60,7 @@ resource "aws_iam_role_policy" "codebuild_policy_4" {
   role   = aws_iam_role.codebuild_role.id
   policy = templatefile("${path.module}/codebuild-cross-account-template.json", {
     remote_account   = var.remote_account_id
-    remote_account_role = aws_iam_role.codebuild_role_2.arn
+    remote_account_role = aws_iam_role.codebuild_role_2.id
     })
   count              = var.use_cross_account ? 1 : 0
 }
