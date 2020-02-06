@@ -16,6 +16,6 @@ resource "aws_iam_role" "remote_codebuild_role" {
 # IAM polices
 resource "aws_iam_role_policy" "remote_codebuild_policy" {
   name   = "${var.function_prefix}-${var.environment}-codebuild-serverless-policy"
-  role   = aws_iam_role.codebuild_role.id
+  role   = aws_iam_role.remote_codebuild_role.id
   policy = file("${path.module}/serverless-role-policy-template.json")
 }
