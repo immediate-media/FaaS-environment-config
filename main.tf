@@ -47,10 +47,7 @@ module "codebuild" {
 }
 
 module "codebuild_ms" {
-  source                       = "./modules/codebuild"
-  providers = {
-  aws = "aws.remote_account"
-  }
+  source                       = "./modules/codebuild_multi_stage"
   function_name                = var.function_name
   function_prefix              = var.function_prefix
   aws_account_number           = var.aws_account_number
@@ -130,4 +127,17 @@ module "ssm" {
   environment                  = var.environment
 
   api_auth_token               = var.api_auth_token
+}
+
+###########
+### IAM ###
+###########
+
+module "iam" {
+  source                       = "./modules/iam"
+  function_prefix              = var.function_prefix
+  region                       = var.region
+  environment                  = var.environment
+  aws_account_number           = var.aws_account_number
+  remote_account_id            = var.remote_account_id
 }

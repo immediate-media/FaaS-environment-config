@@ -3,24 +3,10 @@ provider "aws" {
   region  = var.region
 }
 
-provider "aws" {
-  alias  = "remote_account"
-  region = var.region
-}
 # IAM Role
 resource "aws_iam_role" "codebuild_role" {
   name               = "${var.function_prefix}-${var.environment}-codebuild-role"
   assume_role_policy = file("${path.module}/codebuild-role-template.json")
-}
-
-resource "aws_iam_role" "codebuild_role_2" {
-  provider = aws.remote_account
-  name               = "${var.function_prefix}-${var.environment}-remote-codebuild-role"
-  assume_role_policy = templatefile("${path.module}/codebuild-remote-cross-account-template.json", {
-    aws_account_number = var.aws_account_number,
-    local_account_role = "${var.function_prefix}-${var.environment}-codebuild-role"
-    })
-  count              = var.create_remote_role ? 1 : 0
 }
 
 # IAM polices
@@ -53,25 +39,6 @@ resource "aws_iam_role_policy" "codebuild_policy_3" {
     function_prefix = var.function_prefix
     kms_key_arn     = var.kms_key_arn
   })
-}
-
-resource "aws_iam_role_policy" "codebuild_policy_4" {
-  provider = aws.remote_account
-  name   = "${var.function_prefix}-${var.environment}-remote-codebuild-policy"
-  role   = aws_iam_role.codebuild_role.id
-  policy = templatefile("${path.module}/codebuild-cross-account-template.json", {
-    remote_account   = var.remote_account_id
-    remote_account_role = "${var.function_prefix}-${var.environment}-remote-codebuild-role"
-    })
-  count              = var.use_cross_account ? 1 : 0
-}
-
-resource "aws_iam_role_policy" "codebuild_policy_5" {
-  provider = aws.remote_account
-  name   = "${var.function_prefix}-${var.environment}-remote-codebuild-serverless-policy"
-  role   = "${var.function_prefix}-${var.environment}-remote-codebuild-role"
-  policy = file("${path.module}/serverless-role-policy-template.json")
-  count              = var.use_cross_account ? 1 : 0
 }
 
 # CodeBuild Cache Bucket
