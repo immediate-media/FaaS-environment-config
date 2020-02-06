@@ -14,8 +14,16 @@ variable "platform" {
   description = "Platform identifier."
 }
 
-variable "environment" {
-  description = "Environment name"
+variable "environment_1" {
+  description = "Environment name stage/dev"
+}
+
+variable "environment_2" {
+  description = "Environment name pre-prod/uat"
+}
+
+variable "environment_3" {
+  description = "Environment name prod"
 }
 
 variable "github_base_url" {
@@ -44,4 +52,16 @@ variable "webhook_secret" {
 
 variable "webhook_ip_range" {
   description = "A list of IPs allowed to trigger the webhook"
+}
+
+variable "component_name_1" {
+  description = "A suitable name for additional stage in codepipeline"
+}
+
+variable "component_name_2" {
+  description = "A suitable name for additional stage in codepipeline"
+}
+
+variable "component_name_3" {
+  description = "A suitable name for additional stage in codepipeline"
 }

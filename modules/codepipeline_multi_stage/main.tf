@@ -10,12 +10,12 @@ provider "github" {
 
 # IAM Role
 resource "aws_iam_role" "codepipeline_role" {
-  name = "${var.function_prefix}-${var.environment}-codepipeline-role"
+  name = "${var.function_prefix}-codepipeline-role"
   assume_role_policy = file("${path.module}/codepipeline-role-policy-template.json")
 }
 
 resource "aws_iam_role_policy" "pipeline_policy" {
-  name = "${var.function_prefix}-${var.environment}-pipeline-policy"
+  name = "${var.function_prefix}-pipeline-policy"
   role = aws_iam_role.codepipeline_role.id
   policy = templatefile("${path.module}/codepipeline-policy-template.json", {
       s3_source_bucket_arn = aws_s3_bucket.function_codepipeline_source_packages.arn
@@ -24,7 +24,7 @@ resource "aws_iam_role_policy" "pipeline_policy" {
 
 # CodePipeline Webhook
 resource "aws_codepipeline_webhook" "codepipeline_webhook" {
-  name            = "${var.function_prefix}-${var.environment}-codepipeline-webhook"
+  name            = "${var.function_prefix}-codepipeline-webhook"
   authentication  = "GITHUB_HMAC"
   target_action   = "Source"
   target_pipeline = aws_codepipeline.codepipeline_project.name
@@ -63,19 +63,18 @@ resource "github_repository_webhook" "github_webhook" {
 
 # CodePipeline Source Bucket
 resource "aws_s3_bucket" "function_codepipeline_source_packages" {
-  bucket = "${var.function_prefix}-${var.environment}-codepipeline-source-packages"
+  bucket = "${var.function_prefix}-codepipeline-source-packages"
   acl    = "private"
 
   tags = {
-    Name        = "${var.function_name} ${var.environment} CodePipeline source packages"
+    Name        = "${var.function_name} CodePipeline source packages"
     Platform    = var.platform
-    Environment = var.environment
   }
 }
 
 # CodePipeline Project
 resource "aws_codepipeline" "codepipeline_project" {
-  name     = "${var.function_prefix}-${var.environment}-codepipeline"
+  name     = "${var.function_prefix}-codepipeline"
   role_arn = aws_iam_role.codepipeline_role.arn
 
   # Store codepipeline artifacts in the custom S3 bucket
@@ -118,7 +117,7 @@ resource "aws_codepipeline" "codepipeline_project" {
       version          = "1"
 
       configuration = {
-        ProjectName   = "${var.function_prefix}-${var.environment}-codebuild-project"
+        ProjectName   = "${var.function_prefix}-${var.component_name_1}-codebuild-project"
         PrimarySource = "source_output"
       }
     }
@@ -134,11 +133,10 @@ resource "aws_codepipeline" "codepipeline_project" {
       owner            = "AWS"
       provider         = "CodeBuild"
       input_artifacts  = ["source_output"]
-      output_artifacts = ["build_output"]
       version          = "1"
 
       configuration = {
-        ProjectName   = "${var.function_prefix}-${var.environment}-codebuild-project"
+        ProjectName   = "${var.function_prefix}-${var.environment_1}-codebuild-project"
         PrimarySource = "source_output"
       }
     }
@@ -157,7 +155,7 @@ resource "aws_codepipeline" "codepipeline_project" {
       version          = "1"
 
       configuration = {
-        ProjectName   = "${var.function_prefix}-${var.environment}-codebuild-project"
+        ProjectName   = "${var.function_prefix}-${var.component_name_2}-codebuild-project"
         PrimarySource = "source_output"
       }
     }
@@ -172,12 +170,11 @@ resource "aws_codepipeline" "codepipeline_project" {
       category         = "Build"
       owner            = "AWS"
       provider         = "CodeBuild"
-      input_artifacts  = ["build_output"]
-      output_artifacts = ["build_output_1"]
+      input_artifacts  = ["source_output"]
       version          = "1"
 
       configuration = {
-        ProjectName   = "${var.function_prefix}-${var.environment}-codebuild-project"
+        ProjectName   = "${var.function_prefix}-${var.environment_2}-codebuild-project"
         PrimarySource = "source_output"
       }
     }
@@ -196,7 +193,7 @@ resource "aws_codepipeline" "codepipeline_project" {
       version          = "1"
 
       configuration = {
-        ProjectName   = "${var.function_prefix}-${var.environment}-codebuild-project"
+        ProjectName   = "${var.function_prefix}-${var.component_name_3}-codebuild-project"
         PrimarySource = "source_output"
       }
     }
@@ -220,11 +217,12 @@ resource "aws_codepipeline" "codepipeline_project" {
       category         = "Build"
       owner            = "AWS"
       provider         = "CodeBuild"
-      input_artifacts  = ["build_output_1"]
+      input_artifacts  = ["source_output"]
+      run_order        = 2
       version          = "1"
 
       configuration = {
-        ProjectName   = "${var.function_prefix}-${var.environment}-codebuild-project"
+        ProjectName   = "${var.function_prefix}-${var.environment_3}-codebuild-project"
         PrimarySource = "source_output"
       }
     }

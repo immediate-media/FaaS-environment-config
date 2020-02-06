@@ -3,6 +3,13 @@ provider "aws" {
   region  = var.region
 }
 
+provider "aws" {
+  alias  = "remote_account"
+  region = var.platform_region
+  access_key = var.remote_account_access_key
+  secret_key = var.remote_account_secret_key
+}
+
 ##########
 ### S3 ###
 ##########
@@ -39,6 +46,30 @@ module "codebuild" {
   kms_key_arn                  = module.ssm.kms_key_arn
 }
 
+module "codebuild_ms" {
+  source                       = "./modules/codebuild"
+  providers = {
+  aws = "aws.remote_account"
+  }
+  function_name                = var.function_name
+  function_prefix              = var.function_prefix
+  aws_account_number           = var.aws_account_number
+  remote_account_id            = var.remote_account_id
+  region                       = var.region
+  platform                     = var.platform
+  environment                  = var.environment
+
+  environment_image            = var.environment_image
+  base_os_image                = var.base_os_image
+  environment_variables        = var.environment_variables
+  use_api_auth                 = var.use_api_auth
+  use_cross_account            = var.use_cross_account
+  create_remote_role           = var.create_remote_role
+  buildspec_name               = var.buildspec_name
+
+  kms_key_arn                  = module.ssm.kms_key_arn
+}
+
 ####################
 ### CodePipeline ###
 ####################
@@ -69,7 +100,9 @@ module "codepipeline_ms" {
   function_prefix              = var.function_prefix
   region                       = var.region
   platform                     = var.platform
-  environment                  = var.environment
+  environment_1                = var.environment_1
+  environment_2                = var.environment_2
+  environment_3                = var.environment_3
 
   github_base_url              = var.github_base_url
   github_auth_token            = var.github_auth_token
@@ -78,6 +111,10 @@ module "codepipeline_ms" {
   github_branch                = var.github_branch
   webhook_ip_range             = var.webhook_ip_range
   webhook_secret               = var.webhook_secret
+
+  component_name_1             = var.component_name_1
+  component_name_2             = var.component_name_2
+  component_name_3             = var.component_name_3
 }
 
 ###########

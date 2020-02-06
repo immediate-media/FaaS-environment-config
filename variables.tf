@@ -13,6 +13,11 @@ variable "aws_account_number" {
   description = "The AWS account number for the account to build resources in"
 }
 
+variable "remote_account_id" {
+  type        = number
+  description = "The AWS account number for the remote account to build resources in"
+}
+
 variable "region" {
   type        = string
   description = "The AWS Region to create the lambda function in"
@@ -22,6 +27,16 @@ variable "region" {
 variable "platform" {
   type        = string
   description = "Platform identifier."
+}
+
+variable "remote_account_access_key" {
+  type        = string
+  description = "The access key used to access a remote account"
+}
+
+variable "remote_account_secret_key" {
+  type        = string
+  description = "The secret key used to access a remote account"
 }
 
 variable "environment" {
@@ -99,6 +114,18 @@ variable "use_api_auth" {
   default     = false
 }
 
+variable "use_cross_account" {
+  type        = bool
+  description = "Whether to use the cross account assume role policy for codebuild"
+  default     = false
+}
+
+variable "create_remote_role" {
+  type        = bool
+  description = "Whether to create the cross account role in the target account"
+  default     = false
+}
+
 variable "api_auth_token" {
   type        = string
   description = "The value of the API authentication key"
@@ -109,4 +136,34 @@ variable "use_codepipeline_bucket" {
   type        = bool
   description = "Whether or not you require the codepipeline bucket numerous times - if you just require another codebuild cache bucket - specifiy false"
   default     = true
+}
+
+variable "component_name_1" {
+  type        = string
+  description = "A suitable name for additional stage in codepipeline"
+}
+
+variable "component_name_2" {
+  type        = string
+  description = "A suitable name for additional stage in codepipeline"
+}
+
+variable "component_name_3" {
+  type        = string
+  description = "A suitable name for additional stage in codepipeline"
+}
+
+variable "environment_1" {
+  type        = string
+  description = "Environment name stage/dev"
+}
+
+variable "environment_2" {
+  type        = string
+  description = "Environment name pre-prod/uat"
+}
+
+variable "environment_3" {
+  type        = string
+  description = "Environment name prod"
 }
