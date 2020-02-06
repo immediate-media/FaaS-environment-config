@@ -67,7 +67,7 @@ resource "aws_iam_role_policy" "codebuild_policy_4" {
 
 resource "aws_iam_role_policy" "codebuild_policy_5" {
   name   = "${var.function_prefix}-${var.environment}-cross-account-codebuild-serverless-policy"
-  role   = aws_iam_role.codebuild_role_2.id
+  role   = aws_iam_role.codebuild_role_2.id[count.index]
   policy = file("${path.module}/serverless-role-policy-template.json")
 }
 
