@@ -10,10 +10,6 @@ variable "aws_account_number" {
   description = "The AWS account number for the account to build resources in"
 }
 
-variable "remote_account_id" {
-  description = "The AWS account number for the remote account to build resources in"
-}
-
 variable "region" {
   description = "The AWS Region to create the lambda function in"
 }
@@ -44,14 +40,6 @@ variable "base_os_image" {
 
 variable "use_api_auth" {
   description = "Whether to add authentication to API gateway with Secrets Manager"
-}
-
-variable "use_cross_account" {
-  description = "Whether to use the cross account assume role policy for codebuild"
-}
-
-variable "create_remote_role" {
-  description = "Whether to create the cross account role in the target account"
 }
 
 variable "kms_key_arn" {
