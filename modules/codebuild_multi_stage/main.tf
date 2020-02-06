@@ -3,6 +3,10 @@ provider "aws" {
   region  = var.region
 }
 
+provider "aws" {
+  alias  = "remote_account"
+  region = var.platform_region
+}
 # IAM Role
 resource "aws_iam_role" "codebuild_role" {
   name               = "${var.function_prefix}-${var.environment}-codebuild-role"
