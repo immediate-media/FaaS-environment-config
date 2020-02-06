@@ -56,6 +56,7 @@ resource "aws_iam_role_policy" "codebuild_policy_3" {
 }
 
 resource "aws_iam_role_policy" "codebuild_policy_4" {
+  provider = aws.remote_account
   name   = "${var.function_prefix}-${var.environment}-remote-codebuild-policy"
   role   = aws_iam_role.codebuild_role.id
   policy = templatefile("${path.module}/codebuild-cross-account-template.json", {
@@ -66,6 +67,7 @@ resource "aws_iam_role_policy" "codebuild_policy_4" {
 }
 
 resource "aws_iam_role_policy" "codebuild_policy_5" {
+  provider = aws.remote_account
   name   = "${var.function_prefix}-${var.environment}-remote-codebuild-serverless-policy"
   role   = "${var.function_prefix}-${var.environment}-remote-codebuild-role"
   policy = file("${path.module}/serverless-role-policy-template.json")
