@@ -52,8 +52,6 @@ resource "aws_iam_role_policy" "codebuild_policy_3" {
 }
 
 resource "aws_iam_role_policy" "codebuild_policy_4" {
-  count  = var.use_api_auth ? 1 : 0
-
   name   = "${var.function_prefix}-${var.environment}-cross-account-codebuild-policy"
   role   = aws_iam_role.codebuild_role.id
   policy = templatefile("${path.module}/codebuild-cross-account-template.json", {
