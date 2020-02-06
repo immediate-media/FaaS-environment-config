@@ -60,14 +60,14 @@ resource "aws_iam_role_policy" "codebuild_policy_4" {
   role   = aws_iam_role.codebuild_role.id
   policy = templatefile("${path.module}/codebuild-cross-account-template.json", {
     remote_account   = var.remote_account_id
-    remote_account_role = aws_iam_role.codebuild_role_2.id[count.index]
+    remote_account_role = "${var.function_prefix}-${var.environment}-cross-account-codebuild-role"
     })
   count              = var.use_cross_account ? 1 : 0
 }
 
 resource "aws_iam_role_policy" "codebuild_policy_5" {
   name   = "${var.function_prefix}-${var.environment}-cross-account-codebuild-serverless-policy"
-  role   = aws_iam_role.codebuild_role_2.id[count.index]
+  role   = "${var.function_prefix}-${var.environment}-cross-account-codebuild-role"
   policy = file("${path.module}/serverless-role-policy-template.json")
 }
 
