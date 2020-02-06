@@ -1,8 +1,3 @@
-provider "aws" {
-  alias  = "remote_account"
-  region = var.region
-}
-
 # IAM Role
 resource "aws_iam_role" "remote_codebuild_role" {
   provider = aws.remote_account
