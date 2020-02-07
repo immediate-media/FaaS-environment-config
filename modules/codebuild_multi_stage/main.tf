@@ -2,7 +2,7 @@
 resource "aws_iam_role" "codebuild_role" {
   name               = "${var.function_prefix}-${var.environment}-codebuild-role"
   assume_role_policy = templatefile("${path.module}/${var.assume_role_policy}.json",{
-    remote_account = var.remote_account
+    remote_account = var.remote_account_id
     remote_account_role = var.remote_account_role
     })
 }
