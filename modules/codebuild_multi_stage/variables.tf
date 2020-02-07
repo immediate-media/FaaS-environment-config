@@ -63,3 +63,8 @@ variable "remote_account_role" {
   type        = string
   description = "The role to use in the remote account"
 }
+
+variable "use_cross_account" {
+  type        = bool
+  description = "Whether to use the cross account assume role policy for codebuild"
+}
