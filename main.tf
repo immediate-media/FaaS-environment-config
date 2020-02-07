@@ -2,14 +2,6 @@ provider "aws" {
   version = "~> 2.22"
   region  = var.region
 }
-
-provider "aws" {
-  alias  = "remote_account"
-  region = var.region
-  access_key = var.remote_account_access_key
-  secret_key = var.remote_account_secret_key
-}
-
 ##########
 ### S3 ###
 ##########
