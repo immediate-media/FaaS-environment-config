@@ -1,10 +1,7 @@
 # IAM Role
 resource "aws_iam_role" "codebuild_role" {
   name               = "${var.function_prefix}-${var.environment}-codebuild-role"
-  assume_role_policy = templatefile("${path.module}/${var.assume_role_policy}.json",{
-    remote_account = var.remote_account_id
-    remote_account_role = var.remote_account_role
-    })
+  assume_role_policy = file("${path.module}/codebuild-role-template.json")
 }
 
 # IAM polices
@@ -37,6 +34,17 @@ resource "aws_iam_role_policy" "codebuild_policy_3" {
     function_prefix = var.function_prefix
     kms_key_arn     = var.kms_key_arn
   })
+}
+
+resource "aws_iam_role_policy" "codebuild_policy_4" {
+  provider = aws.remote_account
+  name   = "${var.function_prefix}-${var.environment}-remote-codebuild-policy"
+  role   = aws_iam_role.codebuild_role.id
+  policy = templatefile("${path.module}/codebuild-cross-account-template.json", {
+    remote_account   = var.remote_account_id
+    remote_account_role = var.remote_account_role
+    })
+  count              = var.use_cross_account ? 1 : 0
 }
 
 # CodeBuild Cache Bucket

@@ -61,6 +61,7 @@ module "codebuild_ms" {
   base_os_image                = var.base_os_image
   environment_variables        = var.environment_variables
   use_api_auth                 = var.use_api_auth
+  use_cross_account            = var.use_cross_account
   buildspec_name               = var.buildspec_name
   assume_role_policy           = var.assume_role_policy
 

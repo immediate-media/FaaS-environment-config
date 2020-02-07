@@ -173,7 +173,3 @@ variable "environment_3" {
   type        = string
   description = "Environment name prod"
 }
-
-variable "assume_role_policy" {
-  description = "Allows you to choose the standard codebuild assume role policy, or the remote assume role policy - use codebuild-role-template for standard and cross-account-template for remote"
-}

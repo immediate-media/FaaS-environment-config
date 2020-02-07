@@ -1,13 +1,8 @@
 {
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Principal": {
-        "AWS": "arn:aws:iam::${remote_account}:role/${remote_account_role}"
-      },
-      "Action": "sts:AssumeRole",
-      "Condition": {}
+    "Version": "2012-10-17",
+    "Statement": {
+        "Effect": "Allow",
+        "Action": "sts:AssumeRole",
+        "Resource": "arn:aws:iam::${remote_account}:role/${remote_account_role}"
     }
-  ]
 }
