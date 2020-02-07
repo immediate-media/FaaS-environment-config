@@ -49,3 +49,17 @@ variable "kms_key_arn" {
 variable "buildspec_name" {
   description = "The Buildspec file name - usually buildspec.yml"
 }
+
+variable "assume_role_policy" {
+  description = "Allows you to choose the standard codebuild assume role policy, or the remote assume role policy - use codebuild-role-template for standard and cross-account-template for remote"
+}
+
+variable "remote_account_id" {
+  type        = number
+  description = "The AWS account number for the remote account to build resources in"
+}
+
+variable "remote_account_role" {
+  type        = string
+  description = "The role to use in the remote account"
+}

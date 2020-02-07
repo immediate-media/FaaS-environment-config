@@ -52,6 +52,7 @@ module "codebuild_ms" {
   function_prefix              = var.function_prefix
   aws_account_number           = var.aws_account_number
   remote_account_id            = var.remote_account_id
+  remote_account_role          = var.remote_account_role
   region                       = var.region
   platform                     = var.platform
   environment                  = var.environment
@@ -61,6 +62,7 @@ module "codebuild_ms" {
   environment_variables        = var.environment_variables
   use_api_auth                 = var.use_api_auth
   buildspec_name               = var.buildspec_name
+  assume_role_policy           = var.assume_role_policy
 
   kms_key_arn                  = module.ssm.kms_key_arn
 }

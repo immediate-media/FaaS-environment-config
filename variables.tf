@@ -126,6 +126,12 @@ variable "create_remote_role" {
   default     = false
 }
 
+variable "remote_account_role" {
+  type        = string
+  description = "The role to use in the remote account"
+}
+
+
 variable "api_auth_token" {
   type        = string
   description = "The value of the API authentication key"
@@ -166,4 +172,8 @@ variable "environment_2" {
 variable "environment_3" {
   type        = string
   description = "Environment name prod"
+}
+
+variable "assume_role_policy" {
+  description = "Allows you to choose the standard codebuild assume role policy, or the remote assume role policy - use codebuild-role-template for standard and cross-account-template for remote"
 }
