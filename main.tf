@@ -19,7 +19,7 @@ module "s3" {
 #################
 ### CodeBuild ###
 #################
-
+/*
 module "codebuild" {
   source                       = "./modules/codebuild"
   function_name                = var.function_name
@@ -37,9 +37,9 @@ module "codebuild" {
 
   kms_key_arn                  = module.ssm.kms_key_arn
 }
-
-module "codebuild_ms" {
-  source                       = "./modules/codebuild_multi_stage"
+*/
+module "codebuild" {
+  source                       = "./modules/codebuild"
   function_name                = var.function_name
   function_prefix              = var.function_prefix
   aws_account_number           = var.aws_account_number
@@ -55,7 +55,6 @@ module "codebuild_ms" {
   use_api_auth                 = var.use_api_auth
   use_cross_account            = var.use_cross_account
   buildspec_name               = var.buildspec_name
-  assume_role_policy           = var.assume_role_policy
 
   kms_key_arn                  = module.ssm.kms_key_arn
 }
