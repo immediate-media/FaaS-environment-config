@@ -9,6 +9,7 @@ provider "aws" {
 
 module "s3" {
   source                       = "./modules/s3"
+  region  = var.region
 }
 
 ##############
@@ -17,6 +18,7 @@ module "s3" {
 
 module "lambda" {
   source                       = "./modules/lambda"
+  region  = var.region
 }
 
 ###################
@@ -25,4 +27,5 @@ module "lambda" {
 
 module "api_gateway" {
   source                       = "./modules/api-gateway"
+  region  = var.region
 }
