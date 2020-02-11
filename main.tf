@@ -3,8 +3,8 @@ provider "aws" {
   region  = var.region
 }
 
-module "faas" {
-  source = "git::https://github.com/immediate-media/FaaS-environment-config?ref=tags/1.1.0"
+module "s3" {
+  source = "./modules/s3"
   providers {
     aws = "aws"
   }  
