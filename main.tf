@@ -1,4 +1,5 @@
 provider "aws" {
+  alias = "test"
   version = "~> 2.22"
   region  = var.region
 }
@@ -6,6 +7,6 @@ provider "aws" {
 module "s3" {
   source = "./modules/s3"
   providers {
-    aws = "aws"
+    aws = "aws.test"
   }  
 }
