@@ -17,3 +17,20 @@ resource "aws_iam_role_policy" "remote_codebuild_policy" {
   aws_iam_role.remote_codebuild_role,
   ]
 }
+
+resource "aws_iam_role_policy" "remote_codebuild_policy_2" {
+  count  = var.use_api_auth ? 1 : 0
+
+  name   = "${var.function_prefix}-${var.environment}-codebuild-ssm-policy"
+  role   = aws_iam_role.remote_codebuild_role.id
+  policy = templatefile("${path.module}/ssm-role-policy-template.json", {
+    aws_account_number = var.aws_account_number,
+    region          = var.region,
+    environment     = var.environment,
+    function_prefix = var.function_prefix
+    kms_key_arn     = var.kms_key_arn
+  })
+  depends_on = [
+  aws_iam_role.remote_codebuild_role,
+  ]
+}

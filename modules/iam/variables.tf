@@ -13,3 +13,11 @@ variable "region" {
 variable "environment" {
   description = "Environment name"
 }
+
+variable "use_api_auth" {
+  description = "Whether to add authentication to API gateway with Secrets Manager"
+}
+
+variable "kms_key_arn" {
+  description = "The key used for decrypting secrets from secrets manager"
+}
