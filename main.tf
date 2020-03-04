@@ -134,4 +134,5 @@ module "iam" {
   aws_account_number           = var.aws_account_number
   kms_key_arn                  = module.ssm.kms_key_arn
   use_api_auth                 = var.use_api_auth
+  remote_account_id            = var.remote_account_id
 }
