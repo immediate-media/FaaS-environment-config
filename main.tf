@@ -118,6 +118,7 @@ module "ssm" {
   platform                     = var.platform
   environment                  = var.environment
 
+  use_api_auth                 = var.use_api_auth
   api_auth_token               = var.api_auth_token
 }
 

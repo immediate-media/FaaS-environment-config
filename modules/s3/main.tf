@@ -1,8 +1,3 @@
-provider "aws" {
-  version = "~> 2.22"
-  region  = var.region
-}
-
 resource "aws_s3_bucket" "function_codepipeline_source_packages" {
   bucket = "${var.function_prefix}-${var.environment}-codepipeline-source-packages"
   acl    = "private"
