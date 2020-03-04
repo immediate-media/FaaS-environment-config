@@ -6,8 +6,9 @@ variable "aws_account_number" {
   description = "The AWS account number for the account to build resources in"
 }
 
-variable "remote_aws_account_number" {
-  description = "The AWS account number for the account to build resources in"
+variable "remote_account_id" {
+  type        = number
+  description = "The AWS account number for the remote account to build resources in"
 }
 
 variable "region" {
