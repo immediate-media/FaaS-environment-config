@@ -9,9 +9,9 @@ These branches are important:
 
 Note: we need to merge the test branch eventually, it needs careful unpicking.
 
-To aid this process we've added tags to commits on the `test` branch with a __tf__ suffix:
+To aid this process we've added tags to commits on the `test` branch with a __gf__ suffix:
 
 - 2.0.0gf - the point at which the `test` branch was in sync with `develop`.
 - 2.0.1gf - the head of the `test` branch at the time of writing.
 
-We can now swap to using _tag references_ in the consuming code instead of using the _branch name reference_ .
+We can now swap to using _tag references_ in the consuming code instead of using the _branch name reference_.
