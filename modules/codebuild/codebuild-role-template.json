@@ -4,10 +4,9 @@
     {
       "Action": "sts:AssumeRole",
       "Principal": {
-        "Service": "apigateway.amazonaws.com"
+        "Service": "codebuild.amazonaws.com"
       },
-      "Effect": "Allow",
-      "Sid": ""
+      "Effect": "Allow"
     }
   ]
 }

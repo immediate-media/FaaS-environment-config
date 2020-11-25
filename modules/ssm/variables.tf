@@ -6,22 +6,23 @@ variable "function_prefix" {
   description = "Identifier for function used to prefix resource names"
 }
 
-variable "platform" {
-  description = "Platform identifier."
-}
-
 variable "region" {
   description = "The AWS Region to create the lambda function in"
+}
+
+variable "platform" {
+  description = "Platform identifier."
 }
 
 variable "environment" {
   description = "Environment name"
 }
 
-variable "lambda_invoke_uri" {
-  description = "The lambda URI that API GAteway should invoke"
+variable "use_api_auth" {
+  description = "Whether to add authentication to API gateway with Secrets Manager"
 }
 
-variable "api_gateway_content_handling" {
-  description = "Specifies how to handle request payload content type conversions."
+variable "api_auth_token" {
+  description = "The value of the API authentication key"
+  default     = ""
 }
