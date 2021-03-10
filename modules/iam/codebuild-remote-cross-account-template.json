@@ -3,8 +3,11 @@
   "Statement": [
     {
       "Effect": "Allow",
+      "Principal": {
+        "AWS": "arn:aws:iam::${aws_account_number}:role/${local_account_role}"
+      },
       "Action": "sts:AssumeRole",
-      "Resource": "arn:aws:iam::${aws_account_number}:role/${local_account_role}"
+      "Condition": {}
     }
   ]
 }
