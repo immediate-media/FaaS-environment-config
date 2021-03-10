@@ -158,7 +158,8 @@ resource "aws_codepipeline" "codepipeline_project" {
 
   # Build environment & Deploy Pre Prod
   stage {
-    name = "Build-Deploy-PreProd"
+    count = "${var.preproduction_approval_switch ? 0 : 1}"
+    name  = "Build-Deploy-PreProd"
 
     action {
       name             = "Build-Deploy-PreProduction"
@@ -166,6 +167,35 @@ resource "aws_codepipeline" "codepipeline_project" {
       owner            = "AWS"
       provider         = "CodeBuild"
       input_artifacts  = ["source_output"]
+      version          = "1"
+
+      configuration = {
+        ProjectName   = "${var.function_prefix}-${var.environment_2}-codebuild-project"
+        PrimarySource = "source_output"
+      }
+    }
+  }
+
+  stage {
+    count = "${var.preproduction_approval_switch ? 1 : 0}"
+    name  = "Build-Deploy-PreProd"
+
+    action {
+      name      = "Approval-Stage"
+      category  = "Approval"
+      owner     = "AWS"
+      provider  = "Manual"
+      run_order = 1
+      version   = "1"
+    }
+
+    action {
+      name             = "Build-Deploy-PreProduction"
+      category         = "Build"
+      owner            = "AWS"
+      provider         = "CodeBuild"
+      input_artifacts  = ["source_output"]
+      run_order        = 2
       version          = "1"
 
       configuration = {

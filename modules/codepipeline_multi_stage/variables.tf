@@ -65,3 +65,8 @@ variable "component_name_2" {
 variable "component_name_3" {
   description = "A suitable name for additional stage in codepipeline"
 }
+
+variable "preproduction_approval_switch" {
+  description = "Include a approval stage before pre-production"
+  default     = false
+}
