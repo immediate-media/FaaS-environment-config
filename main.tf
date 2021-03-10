@@ -104,6 +104,8 @@ module "codepipeline_ms" {
   component_name_1 = var.component_name_1
   component_name_2 = var.component_name_2
   component_name_3 = var.component_name_3
+
+  preproduction_approval_switch = var.preproduction_approval_switch
 }
 
 ###########
