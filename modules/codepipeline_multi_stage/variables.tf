@@ -88,7 +88,7 @@ variable "source_s3_bucket" {
   default     = null
 }
 
-variable "source_object_key" {
+variable "source_s3_object_key" {
   description = "The S3 objecct key to use as the source, if any."
   default     = null
 }
