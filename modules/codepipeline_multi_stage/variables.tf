@@ -65,3 +65,21 @@ variable "component_name_2" {
 variable "component_name_3" {
   description = "A suitable name for additional stage in codepipeline"
 }
+
+variable "source_owner" {
+  description = "The creator of the action being called. Possible values are AWS, Custom and ThirdParty."
+  default     = "ThirdParty"
+}
+
+variable "source_provider" {
+  description = "The provider of the service being called by the action. Valid providers are determined by the action category."
+  default     = "GitHub"
+}
+
+variable "source_s3_bucket" {
+  description = "The S3 bucket to use as the source, if any."
+}
+
+variable "source_object_key" {
+  description = "The S3 objecct key to use as the source, if any."
+}

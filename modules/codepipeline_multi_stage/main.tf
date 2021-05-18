@@ -19,6 +19,7 @@ resource "aws_iam_role_policy" "pipeline_policy" {
 
 # CodePipeline Webhook
 resource "aws_codepipeline_webhook" "codepipeline_webhook" {
+  count           = var.source_provider == "GitHub" ? 1 : 0
   name            = "${var.function_prefix}-codepipeline-webhook"
   authentication  = "GITHUB_HMAC"
   target_action   = "Source"
@@ -44,6 +45,7 @@ resource "aws_codepipeline_webhook" "codepipeline_webhook" {
 
 # GitHub Webhook
 resource "github_repository_webhook" "github_webhook" {
+  count      = var.source_provider == "GitHub" ? 1 : 0
   repository = var.github_repo
 
   configuration {
@@ -85,16 +87,19 @@ resource "aws_codepipeline" "codepipeline_project" {
     action {
       name             = "Source"
       category         = "Source"
-      owner            = "ThirdParty"
-      provider         = "GitHub"
+      owner            = var.source_owner
+      provider         = var.source_provider
       version          = "1"
       output_artifacts = ["source_output"]
 
-      configuration = {
+      configuration = var.source_provider == "GitHub" ? {
         Owner      = "immediate-media"
-        Repo       = var.github_repo
-        Branch     = var.github_branch
+        Repo       = var.github_public_repo
+        Branch     = var.github_public_branch
         OAuthToken = var.github_auth_token
+      } : {
+        S3Bucket    = var.source_s3_bucket
+        S3ObjectKey = var.source_s3_object_key
       }
     }
   }
