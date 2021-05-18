@@ -28,30 +28,37 @@ variable "environment_3" {
 
 variable "github_base_url" {
   description = "The base url for GitHub"
+  default     = null
 }
 
 variable "github_auth_token" {
   description = "The authentication token for github"
+  default     = null
 }
 
 variable "github_organization" {
   description = "You GitHub organisation"
+  default     = null
 }
 
 variable "github_repo" {
   description = "The GitHub repo to source the codebase for you function from"
+  default     = null
 }
 
 variable "github_branch" {
   description = "The branch of the repo that should trigger the webhook"
+  default     = null
 }
 
 variable "webhook_secret" {
   description = "The secret for the GitHub webhook"
+  default     = null
 }
 
 variable "webhook_ip_range" {
   description = "A list of IPs allowed to trigger the webhook"
+  default     = null
 }
 
 variable "component_name_1" {
@@ -78,8 +85,10 @@ variable "source_provider" {
 
 variable "source_s3_bucket" {
   description = "The S3 bucket to use as the source, if any."
+  default     = null
 }
 
 variable "source_object_key" {
   description = "The S3 objecct key to use as the source, if any."
+  default     = null
 }
