@@ -94,8 +94,8 @@ resource "aws_codepipeline" "codepipeline_project" {
 
       configuration = var.source_provider == "GitHub" ? {
         Owner      = "immediate-media"
-        Repo       = var.github_public_repo
-        Branch     = var.github_public_branch
+        Repo       = var.github_repo
+        Branch     = var.github_branch
         OAuthToken = var.github_auth_token
       } : {
         S3Bucket    = var.source_s3_bucket
