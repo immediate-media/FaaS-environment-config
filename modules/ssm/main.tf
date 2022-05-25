@@ -3,7 +3,7 @@ provider "random" {
 }
 
 locals {
-  api_auth_token = "${var.api_auth_token != "" ? var.api_auth_token : random_password.api_auth_token.result}"
+  api_auth_token = var.api_auth_token != "" ? var.api_auth_token : random_password.api_auth_token.result
 }
 
 resource "random_password" "api_auth_token" {

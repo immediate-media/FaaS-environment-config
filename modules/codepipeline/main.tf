@@ -1,6 +1,6 @@
 provider "github" {
   token        = var.github_auth_token
-  organization = "immediate-media"
+  owner = "immediate-media"
 }
 
 # IAM Role

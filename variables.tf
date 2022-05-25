@@ -52,9 +52,9 @@ variable "environment_image" {
 
 variable "environment_variables" {
   description = "A list of all the environment variables to be passed as key/value pairs"
-  type        = list(object({
-    name      = string
-    value     = string
+  type = list(object({
+    name  = string
+    value = string
   }))
 }
 
