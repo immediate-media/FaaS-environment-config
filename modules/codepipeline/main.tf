@@ -15,6 +15,7 @@ resource "aws_iam_role" "codepipeline_role" {
   tags = {
     Platform = var.platform
     Env      = var.environment
+    Service  = var.function_name
   }
 }
 
