@@ -10,15 +10,19 @@ provider "github" {
 
 # IAM Role
 resource "aws_iam_role" "codepipeline_role" {
-  name = "${var.function_prefix}-${var.environment}-codepipeline-role"
+  name               = "${var.function_prefix}-${var.environment}-codepipeline-role"
   assume_role_policy = file("${path.module}/codepipeline-role-policy-template.json")
+  tags = {
+    Platform = var.platform
+    Env      = var.environment
+  }
 }
 
 resource "aws_iam_role_policy" "pipeline_policy" {
   name = "${var.function_prefix}-${var.environment}-pipeline-policy"
   role = aws_iam_role.codepipeline_role.id
   policy = templatefile("${path.module}/codepipeline-policy-template.json", {
-      s3_source_bucket_arn = var.s3_source_bucket_arn
+    s3_source_bucket_arn = var.s3_source_bucket_arn
   })
 }
 
@@ -29,7 +33,7 @@ resource "aws_codepipeline_webhook" "codepipeline_webhook" {
   target_action   = "Source"
   target_pipeline = aws_codepipeline.codepipeline_project.name
 
-  
+
   lifecycle {
     ignore_changes = [
       authentication_configuration
@@ -44,6 +48,12 @@ resource "aws_codepipeline_webhook" "codepipeline_webhook" {
   filter {
     json_path    = "$.ref"
     match_equals = "refs/heads/${var.github_branch}"
+  }
+
+  tags = {
+    Platform = var.platform
+    Env      = var.environment
+    Service  = var.function_name
   }
 }
 
@@ -111,5 +121,10 @@ resource "aws_codepipeline" "codepipeline_project" {
         PrimarySource = "source_output"
       }
     }
+  }
+  tags = {
+    Platform = var.platform
+    Env      = var.environment
+    Service  = var.function_name
   }
 }
