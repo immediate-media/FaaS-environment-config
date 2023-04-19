@@ -85,7 +85,7 @@ resource "aws_codepipeline" "codepipeline_project" {
       output_artifacts = ["source_output"]
 
       configuration = {
-        owner      = "immediate-media"
+        Owner      = "immediate-media"
         Repo       = var.github_repo
         Branch     = var.github_branch
         OAuthToken = var.github_auth_token
