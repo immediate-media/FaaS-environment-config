@@ -5,7 +5,7 @@ provider "aws" {
 
 provider "github" {
   token        = var.github_auth_token
-  organization = "immediate-media"
+  Owner = "immediate-media"
 }
 
 # IAM Role
