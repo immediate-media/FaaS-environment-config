@@ -1,11 +1,11 @@
 provider "github" {
-  token        = var.github_auth_token
+  token = var.github_auth_token
   owner = "immediate-media"
 }
 
 # IAM Role
 resource "aws_iam_role" "codepipeline_role" {
-  name = "${var.function_prefix}-${var.environment}-codepipeline-role"
+  name               = "${var.function_prefix}-${var.environment}-codepipeline-role"
   assume_role_policy = file("${path.module}/codepipeline-role-policy-template.json")
 }
 
@@ -13,7 +13,7 @@ resource "aws_iam_role_policy" "pipeline_policy" {
   name = "${var.function_prefix}-${var.environment}-pipeline-policy"
   role = aws_iam_role.codepipeline_role.id
   policy = templatefile("${path.module}/codepipeline-policy-template.json", {
-      s3_source_bucket_arn = var.s3_source_bucket_arn
+    s3_source_bucket_arn = var.s3_source_bucket_arn
   })
 }
 
@@ -24,7 +24,7 @@ resource "aws_codepipeline_webhook" "codepipeline_webhook" {
   target_action   = "Source"
   target_pipeline = aws_codepipeline.codepipeline_project.name
 
-  
+
   lifecycle {
     ignore_changes = [
       authentication_configuration

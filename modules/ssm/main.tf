@@ -12,7 +12,7 @@ resource "random_password" "api_auth_token" {
 }
 
 resource "aws_kms_key" "kms_key" {
-  count  = var.use_api_auth ? 1 : 0
+  count = var.use_api_auth ? 1 : 0
 
   description = var.function_name
 
@@ -24,14 +24,14 @@ resource "aws_kms_key" "kms_key" {
 }
 
 resource "aws_kms_alias" "kms_alias" {
-  count  = var.use_api_auth ? 1 : 0
+  count = var.use_api_auth ? 1 : 0
 
   name          = "alias/${var.function_prefix}-${var.environment}"
   target_key_id = aws_kms_key.kms_key[0].key_id
 }
 
 resource "aws_ssm_parameter" "ssm_ps_prod" {
-  count  = var.use_api_auth ? 1 : 0
+  count = var.use_api_auth ? 1 : 0
 
   name   = "${var.function_prefix}-${var.environment}-rest-api-key"
   type   = "SecureString"
