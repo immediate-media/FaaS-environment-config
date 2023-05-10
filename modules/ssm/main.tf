@@ -1,7 +1,3 @@
-provider "random" {
-  version = "~> 2.2.0"
-}
-
 locals {
   api_auth_token = var.api_auth_token != "" ? var.api_auth_token : random_password.api_auth_token.result
 }
