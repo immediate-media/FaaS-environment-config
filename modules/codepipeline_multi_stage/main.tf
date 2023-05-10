@@ -85,16 +85,15 @@ resource "aws_codepipeline" "codepipeline_project" {
     action {
       name             = "Source"
       category         = "Source"
-      owner            = "ThirdParty"
-      provider         = "GitHub"
+      owner            = "AWS"
+      provider         = "CodeStarSourceConnection"
       version          = "1"
       output_artifacts = ["source_output"]
 
       configuration = {
-        Owner      = "immediate-media"
-        Repo       = var.github_repo
-        Branch     = var.github_branch
-        OAuthToken = var.github_auth_token
+        ConnectionArn           = var.codestar_connection_arn
+        FullRepositoryId        = "immediate-media/${var.github_repo}"
+        BranchName              = var.github_branch
       }
     }
   }
