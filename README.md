@@ -1,4 +1,7 @@
 # FaaS-environment-config
+
+> Function-as-a-Service
+
 A Terraform module for deploying Lambda functions with an API gateway from an S3 bucket.
 
 These branches are important:
