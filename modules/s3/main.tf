@@ -1,6 +1,5 @@
 provider "aws" {
-  version = "~> 2.22"
-  region  = var.region
+  region = var.region
 }
 
 resource "aws_s3_bucket" "function_codepipeline_source_packages" {

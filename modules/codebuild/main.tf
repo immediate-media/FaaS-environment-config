@@ -1,6 +1,5 @@
 provider "aws" {
-  version = "~> 2.22"
-  region  = var.region
+  region = var.region
 }
 
 # IAM Role
@@ -11,8 +10,8 @@ resource "aws_iam_role" "codebuild_role" {
 
 # IAM polices
 resource "aws_iam_role_policy" "codebuild_policy" {
-  name   = "${var.function_prefix}-${var.environment}-codebuild-base-policy"
-  role   = aws_iam_role.codebuild_role.id
+  name = "${var.function_prefix}-${var.environment}-codebuild-base-policy"
+  role = aws_iam_role.codebuild_role.id
   policy = templatefile("${path.module}/codebuild-role-policy-template.json", {
     aws_account_number = var.aws_account_number,
     region             = var.region,
@@ -28,16 +27,16 @@ resource "aws_iam_role_policy" "codebuild_policy_2" {
 }
 
 resource "aws_iam_role_policy" "codebuild_policy_3" {
-  count  = var.use_api_auth ? 1 : 0
+  count = var.use_api_auth ? 1 : 0
 
-  name   = "${var.function_prefix}-${var.environment}-codebuild-ssm-policy"
-  role   = aws_iam_role.codebuild_role.id
+  name = "${var.function_prefix}-${var.environment}-codebuild-ssm-policy"
+  role = aws_iam_role.codebuild_role.id
   policy = templatefile("${path.module}/ssm-role-policy-template.json", {
     aws_account_number = var.aws_account_number,
-    region          = var.region,
-    environment     = var.environment,
-    function_prefix = var.function_prefix
-    kms_key_arn     = var.kms_key_arn
+    region             = var.region,
+    environment        = var.environment,
+    function_prefix    = var.function_prefix
+    kms_key_arn        = var.kms_key_arn
   })
 }
 

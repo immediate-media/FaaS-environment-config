@@ -8,3 +8,6 @@
 # .tfvars files
 *.tfvars
 plan
+*.terraform.lock.hcl
+
+.idea/
