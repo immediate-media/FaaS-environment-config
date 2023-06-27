@@ -1,11 +1,6 @@
-provider "aws" {
-  version = "~> 2.22"
-  region  = var.region
-}
-
 provider "github" {
-  token        = var.github_auth_token
-  organization = "immediate-media"
+  token = var.github_auth_token
+  owner = "immediate-media"
 }
 
 # IAM Role

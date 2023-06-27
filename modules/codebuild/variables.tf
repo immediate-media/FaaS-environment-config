@@ -45,3 +45,22 @@ variable "use_api_auth" {
 variable "kms_key_arn" {
   description = "The key used for decrypting secrets from secrets manager"
 }
+
+variable "buildspec_name" {
+  description = "The Buildspec file name - usually buildspec.yml"
+}
+
+variable "remote_account_id" {
+  type        = number
+  description = "The AWS account number for the remote account to build resources in"
+}
+
+variable "remote_account_role" {
+  type        = string
+  description = "The role to use in the remote account"
+}
+
+variable "use_cross_account" {
+  type        = bool
+  description = "Whether to use the cross account assume role policy for codebuild"
+}
