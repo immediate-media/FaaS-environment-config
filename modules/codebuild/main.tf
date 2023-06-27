@@ -1,8 +1,3 @@
-provider "aws" {
-  version = "~> 2.22"
-  region  = var.region
-}
-
 # IAM Role
 resource "aws_iam_role" "codebuild_role" {
   name               = "${var.function_prefix}-${var.environment}-codebuild-role"
@@ -51,6 +46,28 @@ resource "aws_iam_role_policy" "codebuild_policy_3" {
   })
 }
 
+resource "aws_iam_role_policy" "codebuild_policy_4" {
+  name = "${var.function_prefix}-${var.environment}-remote-codebuild-policy"
+  role = aws_iam_role.codebuild_role.id
+  policy = templatefile("${path.module}/codebuild-cross-account-template.json", {
+    remote_account      = var.remote_account_id
+    remote_account_role = var.remote_account_role
+  })
+  count = var.use_cross_account ? 1 : 0
+}
+
+# CodeBuild Cache Bucket
+resource "aws_s3_bucket" "function_codebuild_cache" {
+  bucket = "${var.function_prefix}-${var.environment}-codebuild-cache"
+  acl    = "private"
+
+  tags = {
+    Name        = "${var.function_name} ${var.environment} CodeBuild cache"
+    Platform    = var.platform
+    Environment = var.environment
+  }
+}
+
 # CodeBuild Project
 resource "aws_codebuild_project" "codebuild_project" {
   name         = "${var.function_prefix}-${var.environment}-codebuild-project"
@@ -82,7 +99,8 @@ resource "aws_codebuild_project" "codebuild_project" {
   }
 
   source {
-    type = "CODEPIPELINE"
+    type      = "CODEPIPELINE"
+    buildspec = var.buildspec_name
   }
   tags = {
     Platform = var.platform
