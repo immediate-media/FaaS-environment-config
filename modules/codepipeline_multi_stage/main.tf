@@ -61,6 +61,17 @@ resource "aws_s3_bucket" "function_codepipeline_source_packages" {
   bucket = "${var.function_prefix}-codepipeline-source-packages"
   acl    = "private"
 
+  server_side_encryption_configuration {
+    rule {
+      bucket_key_enabled = false
+      
+      apply_server_side_encryption_by_default {
+        kms_master_key_id = ""
+        sse_algorithm = "AES256"
+      }
+    }
+  }
+
   tags = {
     Name     = "${var.function_name} CodePipeline source packages"
     Platform = var.platform
