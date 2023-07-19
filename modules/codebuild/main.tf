@@ -56,6 +56,17 @@ resource "aws_s3_bucket" "function_codebuild_cache" {
   bucket = "${var.function_prefix}-${var.environment}-codebuild-cache"
   acl    = "private"
 
+  server_side_encryption_configuration {
+    rule {
+      bucket_key_enabled = false
+      
+      apply_server_side_encryption_by_default {
+        kms_master_key_id = ""
+        sse_algorithm = "AES256"
+      }
+    }
+  }
+
   tags = {
     Name        = "${var.function_name} ${var.environment} CodeBuild cache"
     Platform    = var.platform
