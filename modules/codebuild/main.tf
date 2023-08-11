@@ -79,15 +79,19 @@ data "aws_iam_policy_document" "codebuild_vpc_policy" {
     ]
 
     # Allow codebuild to use public subnets where the NAT resides to go outbound
-    condition {
-      test     = "StringEquals"
-      variable = "ec2:subnet"
+    dynamic "condition" {
+      # if var.subnet_cidrs is not an empty array, then we need to add the condition
+      for_each = var.subnet_cidrs != [] ? [1] : []
+      content {
+        test     = "StringEquals"
+        variable = "ec2:subnet"
 
-      values = [
-        "arn:aws:ec2:${var.region}:${var.aws_account_number}:subnet/${element(var.subnet_cidrs, 0)}",
-        "arn:aws:ec2:${var.region}:${var.aws_account_number}:subnet/${element(var.subnet_cidrs, 1)}",
-        "arn:aws:ec2:${var.region}:${var.aws_account_number}:subnet/${element(var.subnet_cidrs, 2)}",
-      ]
+        values = [
+          "arn:aws:ec2:${var.region}:${var.aws_account_number}:subnet/${element(var.subnet_cidrs, 0)}",
+          "arn:aws:ec2:${var.region}:${var.aws_account_number}:subnet/${element(var.subnet_cidrs, 1)}",
+          "arn:aws:ec2:${var.region}:${var.aws_account_number}:subnet/${element(var.subnet_cidrs, 2)}",
+        ]
+      }
     }
 
     # Provide auth for codebuild
