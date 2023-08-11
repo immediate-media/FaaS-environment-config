@@ -51,6 +51,61 @@ resource "aws_iam_role_policy" "codebuild_policy_4" {
   count = var.use_cross_account ? 1 : 0
 }
 
+# allows codebuild to use the NAT GW
+data "aws_iam_policy_document" "codebuild_vpc_policy" {
+  # Specify the access codebuild needs for VPC
+  statement {
+    actions = [
+      "ec2:CreateNetworkInterface",
+      "ec2:DescribeDhcpOptions",
+      "ec2:DescribeNetworkInterfaces",
+      "ec2:DeleteNetworkInterface",
+      "ec2:DescribeSubnets",
+      "ec2:DescribeSecurityGroups",
+      "ec2:DescribeVpcs",
+    ]
+
+    resources = ["*"]
+  }
+
+  # Allow codebuild to use the NAT
+  statement {
+    actions = [
+      "ec2:CreateNetworkInterfacePermission",
+    ]
+
+    resources = [
+      "arn:aws:ec2:${var.region}:${var.aws_account_number}:network-interface/*",
+    ]
+
+    # Allow codebuild to use public subnets where the NAT resides to go outbound
+    condition {
+      test     = "StringEquals"
+      variable = "ec2:subnet"
+
+      values = [
+        "arn:aws:ec2:${var.region}:${var.aws_account_number}:subnet/${element(var.subnet_cidrs, 0)}",
+        "arn:aws:ec2:${var.region}:${var.aws_account_number}:subnet/${element(var.subnet_cidrs, 1)}",
+        "arn:aws:ec2:${var.region}:${var.aws_account_number}:subnet/${element(var.subnet_cidrs, 2)}",
+      ]
+    }
+
+    # Provide auth for codebuild
+    condition {
+      test     = "StringEquals"
+      variable = "ec2:AuthorizedService"
+      values   = ["codebuild.amazonaws.com"]
+    }
+  }
+
+}
+
+resource "aws_iam_role_policy" "codebuild_vpc_access" {
+  name   = "${var.function_prefix}-${var.environment}-codebuild-vpc"
+  role   = aws_iam_role.codebuild_role.id
+  policy = data.aws_iam_policy_document.codebuild_vpc_policy.json
+}
+
 # CodeBuild Cache Bucket
 resource "aws_s3_bucket" "function_codebuild_cache" {
   bucket = "${var.function_prefix}-${var.environment}-codebuild-cache"
