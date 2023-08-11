@@ -68,7 +68,7 @@ variable "use_cross_account" {
 variable "subnet_cidrs" {
   description = "Array of subnets from platform, common reference as data.terraform_remote_state.platform.outputs.app_subnet_ids"
   type        = list(string)
-  default     = []
+  default     = null
 }
 
 variable "vpc_id" {
