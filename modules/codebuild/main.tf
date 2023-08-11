@@ -59,10 +59,10 @@ resource "aws_s3_bucket" "function_codebuild_cache" {
   server_side_encryption_configuration {
     rule {
       bucket_key_enabled = false
-      
+
       apply_server_side_encryption_by_default {
         kms_master_key_id = ""
-        sse_algorithm = "AES256"
+        sse_algorithm     = "AES256"
       }
     }
   }
@@ -118,7 +118,7 @@ resource "aws_codebuild_project" "codebuild_project" {
   dynamic "vpc_config" {
     for_each = var.vpc_id != "" ? [1] : []
     content {
-      vpc_id = var.vpc_id
+      vpc_id  = var.vpc_id
       subnets = var.subnet_cidrs
       security_group_ids = [
         var.public_security_group_id,

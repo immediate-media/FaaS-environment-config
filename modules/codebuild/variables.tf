@@ -73,10 +73,10 @@ variable "subnet_cidrs" {
 
 variable "vpc_id" {
   description = "Generated from Terraform outputs, common reference as data.terraform_remote_state.platform.outputs.vpc_id"
-  default = ""
+  default     = ""
 }
 
 variable "public_security_group_id" {
   description = "Generated from configured security groups, common reference as aws_security_group.outbound.id"
-  default = ""
+  default     = ""
 }
