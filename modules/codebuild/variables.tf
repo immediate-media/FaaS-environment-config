@@ -64,3 +64,19 @@ variable "use_cross_account" {
   type        = bool
   description = "Whether to use the cross account assume role policy for codebuild"
 }
+
+variable "subnet_cidrs" {
+  description = "Array of subnets from platform, common reference as data.terraform_remote_state.platform.outputs.app_subnet_ids"
+  type        = list(string)
+  default     = []
+}
+
+variable "vpc_id" {
+  description = "Generated from Terraform outputs, common reference as data.terraform_remote_state.platform.outputs.vpc_id"
+  default = ""
+}
+
+variable "public_security_group_id" {
+  description = "Generated from configured security groups, common reference as aws_security_group.outbound.id"
+  default = ""
+}
