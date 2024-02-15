@@ -1,8 +1,3 @@
-provider "aws" {
-  version = "~> 2.22"
-  region  = var.region
-}
-
 # IAM Role
 resource "aws_iam_role" "codebuild_role" {
   name               = "${var.function_prefix}-${var.environment}-codebuild-role"
@@ -51,6 +46,98 @@ resource "aws_iam_role_policy" "codebuild_policy_3" {
   })
 }
 
+resource "aws_iam_role_policy" "codebuild_policy_4" {
+  name = "${var.function_prefix}-${var.environment}-remote-codebuild-policy"
+  role = aws_iam_role.codebuild_role.id
+  policy = templatefile("${path.module}/codebuild-cross-account-template.json", {
+    remote_account      = var.remote_account_id
+    remote_account_role = var.remote_account_role
+  })
+  count = var.use_cross_account ? 1 : 0
+}
+
+# allows codebuild to use the NAT GW
+data "aws_iam_policy_document" "codebuild_vpc_policy" {
+  # Specify the access codebuild needs for VPC
+  statement {
+    actions = [
+      "ec2:CreateNetworkInterface",
+      "ec2:DescribeDhcpOptions",
+      "ec2:DescribeNetworkInterfaces",
+      "ec2:DeleteNetworkInterface",
+      "ec2:DescribeSubnets",
+      "ec2:DescribeSecurityGroups",
+      "ec2:DescribeVpcs",
+    ]
+
+    resources = ["*"]
+  }
+
+  # Allow codebuild to use the NAT
+  statement {
+    actions = [
+      "ec2:CreateNetworkInterfacePermission",
+    ]
+
+    resources = [
+      "arn:aws:ec2:${var.region}:${var.aws_account_number}:network-interface/*",
+    ]
+
+    # Allow codebuild to use public subnets where the NAT resides to go outbound
+    dynamic "condition" {
+      # if var.subnet_cidrs is not an empty array, then we need to add the condition
+      for_each = var.subnet_cidrs != null ? [1] : []
+      content {
+        test     = "StringEquals"
+        variable = "ec2:subnet"
+
+        values = [
+          "arn:aws:ec2:${var.region}:${var.aws_account_number}:subnet/${element(var.subnet_cidrs, 0)}",
+          "arn:aws:ec2:${var.region}:${var.aws_account_number}:subnet/${element(var.subnet_cidrs, 1)}",
+          "arn:aws:ec2:${var.region}:${var.aws_account_number}:subnet/${element(var.subnet_cidrs, 2)}",
+        ]
+      }
+    }
+
+    # Provide auth for codebuild
+    condition {
+      test     = "StringEquals"
+      variable = "ec2:AuthorizedService"
+      values   = ["codebuild.amazonaws.com"]
+    }
+  }
+
+}
+
+resource "aws_iam_role_policy" "codebuild_vpc_access" {
+  name   = "${var.function_prefix}-${var.environment}-codebuild-vpc"
+  role   = aws_iam_role.codebuild_role.id
+  policy = data.aws_iam_policy_document.codebuild_vpc_policy.json
+}
+
+# CodeBuild Cache Bucket
+resource "aws_s3_bucket" "function_codebuild_cache" {
+  bucket = "${var.function_prefix}-${var.environment}-codebuild-cache"
+  acl    = "private"
+
+  server_side_encryption_configuration {
+    rule {
+      bucket_key_enabled = false
+
+      apply_server_side_encryption_by_default {
+        kms_master_key_id = ""
+        sse_algorithm     = "AES256"
+      }
+    }
+  }
+
+  tags = {
+    Name        = "${var.function_name} ${var.environment} CodeBuild cache"
+    Platform    = var.platform
+    Environment = var.environment
+  }
+}
+
 # CodeBuild Project
 resource "aws_codebuild_project" "codebuild_project" {
   name         = "${var.function_prefix}-${var.environment}-codebuild-project"
@@ -82,11 +169,24 @@ resource "aws_codebuild_project" "codebuild_project" {
   }
 
   source {
-    type = "CODEPIPELINE"
+    type      = "CODEPIPELINE"
+    buildspec = var.buildspec_name
   }
   tags = {
     Platform = var.platform
     Env      = var.environment
     Service  = var.function_name
+  }
+
+  # include the vpc config if the vpc_id is set
+  dynamic "vpc_config" {
+    for_each = var.vpc_id != "" ? [1] : []
+    content {
+      vpc_id  = var.vpc_id
+      subnets = var.subnet_cidrs
+      security_group_ids = [
+        var.public_security_group_id,
+      ]
+    }
   }
 }
