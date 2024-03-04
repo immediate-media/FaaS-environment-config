@@ -25,6 +25,7 @@ variable "environment" {
 variable "environment_image" {
   description = "Which Docker image to use as your build environment"
   type        = string
+  default     = "aws/codebuild/standard:7.0"
 }
 
 variable "environment_variables" {
