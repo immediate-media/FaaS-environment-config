@@ -128,78 +128,91 @@ resource "aws_codepipeline" "codepipeline_project" {
     }
   }
 
-  # Build environment & Deploy Staging
-  stage {
-    name = "Build-Deploy-Staging"
+  dynamic "stage" {
+    for_each = var.disable_staging == "false" ? {  } : { enabled : true }
+    content {
+      name = "Staging"
+      # Build environment & Deploy Staging
+      stage {
+        name = "Build-Deploy-Staging"
 
-    action {
-      name            = "Build-Deploy-Staging"
-      category        = "Build"
-      owner           = "AWS"
-      provider        = "CodeBuild"
-      input_artifacts = ["source_output"]
-      version         = "1"
+        action {
+          name            = "Build-Deploy-Staging"
+          category        = "Build"
+          owner           = "AWS"
+          provider        = "CodeBuild"
+          input_artifacts = ["source_output"]
+          version         = "1"
 
-      configuration = {
-        ProjectName   = "${var.function_prefix}-${var.environment_1}-codebuild-project"
-        PrimarySource = "source_output"
+          configuration = {
+            ProjectName   = "${var.function_prefix}-${var.environment_1}-codebuild-project"
+            PrimarySource = "source_output"
+          }
+        }
+      }
+
+      # Integration Tests
+      stage {
+        name = "Integration-Tests"
+
+        action {
+          name            = "Integration-Tests"
+          category        = "Build"
+          owner           = "AWS"
+          provider        = "CodeBuild"
+          input_artifacts = ["source_output"]
+          version         = "1"
+
+          configuration = {
+            ProjectName   = "${var.function_prefix}-${var.component_name_2}-codebuild-project"
+            PrimarySource = "source_output"
+          }
+        }
       }
     }
   }
 
-  # Integration Tests
-  stage {
-    name = "Integration-Tests"
+  dynamic "stage" {
+    for_each = var.disable_preproduction == "false" ? {  } : { enabled : true }
+    content {
+      name = "Preproduction"
+      # Build environment & Deploy Pre Prod
+      stage {
+        name = "Build-Deploy-PreProd"
 
-    action {
-      name            = "Integration-Tests"
-      category        = "Build"
-      owner           = "AWS"
-      provider        = "CodeBuild"
-      input_artifacts = ["source_output"]
-      version         = "1"
+        action {
+          name            = "Build-Deploy-PreProduction"
+          category        = "Build"
+          owner           = "AWS"
+          provider        = "CodeBuild"
+          input_artifacts = ["source_output"]
+          version         = "1"
 
-      configuration = {
-        ProjectName   = "${var.function_prefix}-${var.component_name_2}-codebuild-project"
-        PrimarySource = "source_output"
+          configuration = {
+            ProjectName   = "${var.function_prefix}-${var.environment_2}-codebuild-project"
+            PrimarySource = "source_output"
+          }
+        }
       }
-    }
-  }
 
-  # Build environment & Deploy Pre Prod
-  stage {
-    name = "Build-Deploy-PreProd"
 
-    action {
-      name            = "Build-Deploy-PreProduction"
-      category        = "Build"
-      owner           = "AWS"
-      provider        = "CodeBuild"
-      input_artifacts = ["source_output"]
-      version         = "1"
+      # Integration Tests II
+      stage {
+        name = "Integration-Tests-II"
 
-      configuration = {
-        ProjectName   = "${var.function_prefix}-${var.environment_2}-codebuild-project"
-        PrimarySource = "source_output"
-      }
-    }
-  }
+        action {
+          name            = "Integration-Tests-II"
+          category        = "Build"
+          owner           = "AWS"
+          provider        = "CodeBuild"
+          input_artifacts = ["source_output"]
+          version         = "1"
 
-  # Integration Tests II
-  stage {
-    name = "Integration-Tests-II"
-
-    action {
-      name            = "Integration-Tests-II"
-      category        = "Build"
-      owner           = "AWS"
-      provider        = "CodeBuild"
-      input_artifacts = ["source_output"]
-      version         = "1"
-
-      configuration = {
-        ProjectName   = "${var.function_prefix}-${var.component_name_3}-codebuild-project"
-        PrimarySource = "source_output"
+          configuration = {
+            ProjectName   = "${var.function_prefix}-${var.component_name_3}-codebuild-project"
+            PrimarySource = "source_output"
+          }
+        }
       }
     }
   }
