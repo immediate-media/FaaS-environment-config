@@ -64,7 +64,7 @@ resource "aws_s3_bucket" "function_codepipeline_source_packages" {
   server_side_encryption_configuration {
     rule {
       bucket_key_enabled = false
-      
+
       apply_server_side_encryption_by_default {
         kms_master_key_id = ""
         sse_algorithm = "AES256"
@@ -102,9 +102,9 @@ resource "aws_codepipeline" "codepipeline_project" {
       output_artifacts = ["source_output"]
 
       configuration = {
-        ConnectionArn           = var.codestar_connection_arn
-        FullRepositoryId        = "immediate-media/${var.github_repo}"
-        BranchName              = var.github_branch
+        ConnectionArn    = var.codestar_connection_arn
+        FullRepositoryId = "immediate-media/${var.github_repo}"
+        BranchName       = var.github_branch
       }
     }
   }
@@ -128,94 +128,92 @@ resource "aws_codepipeline" "codepipeline_project" {
     }
   }
 
+  # Build environment & Deploy Staging
   dynamic "stage" {
-    for_each = var.disable_staging == "false" ? {  } : { enabled : true }
+    for_each = var.disable_staging == "false" ? [1] : []
+
     content {
-      name = "Staging"
       # Build environment & Deploy Staging
-      stage {
-        name = "Build-Deploy-Staging"
+      name = "Build-Deploy-Staging"
 
-        action {
-          name            = "Build-Deploy-Staging"
-          category        = "Build"
-          owner           = "AWS"
-          provider        = "CodeBuild"
-          input_artifacts = ["source_output"]
-          version         = "1"
+      action {
+        name            = "Build-Deploy-Staging"
+        category        = "Build"
+        owner           = "AWS"
+        provider        = "CodeBuild"
+        input_artifacts = ["source_output"]
+        version         = "1"
 
-          configuration = {
-            ProjectName   = "${var.function_prefix}-${var.environment_1}-codebuild-project"
-            PrimarySource = "source_output"
-          }
-        }
-      }
-
-      # Integration Tests
-      stage {
-        name = "Integration-Tests"
-
-        action {
-          name            = "Integration-Tests"
-          category        = "Build"
-          owner           = "AWS"
-          provider        = "CodeBuild"
-          input_artifacts = ["source_output"]
-          version         = "1"
-
-          configuration = {
-            ProjectName   = "${var.function_prefix}-${var.component_name_2}-codebuild-project"
-            PrimarySource = "source_output"
-          }
+        configuration = {
+          ProjectName   = "${var.function_prefix}-${var.environment_1}-codebuild-project"
+          PrimarySource = "source_output"
         }
       }
     }
   }
 
   dynamic "stage" {
-    for_each = var.disable_preproduction == "false" ? {  } : { enabled : true }
+    for_each = var.disable_staging == "false" ? [1] : []
+    # Integration Tests
     content {
-      name = "Preproduction"
-      # Build environment & Deploy Pre Prod
-      stage {
-        name = "Build-Deploy-PreProd"
+      name = "Integration-Tests"
+      action {
+        name            = "Integration-Tests"
+        category        = "Build"
+        owner           = "AWS"
+        provider        = "CodeBuild"
+        input_artifacts = ["source_output"]
+        version         = "1"
 
-        action {
-          name            = "Build-Deploy-PreProduction"
-          category        = "Build"
-          owner           = "AWS"
-          provider        = "CodeBuild"
-          input_artifacts = ["source_output"]
-          version         = "1"
-
-          configuration = {
-            ProjectName   = "${var.function_prefix}-${var.environment_2}-codebuild-project"
-            PrimarySource = "source_output"
-          }
-        }
-      }
-
-
-      # Integration Tests II
-      stage {
-        name = "Integration-Tests-II"
-
-        action {
-          name            = "Integration-Tests-II"
-          category        = "Build"
-          owner           = "AWS"
-          provider        = "CodeBuild"
-          input_artifacts = ["source_output"]
-          version         = "1"
-
-          configuration = {
-            ProjectName   = "${var.function_prefix}-${var.component_name_3}-codebuild-project"
-            PrimarySource = "source_output"
-          }
+        configuration = {
+          ProjectName   = "${var.function_prefix}-${var.component_name_2}-codebuild-project"
+          PrimarySource = "source_output"
         }
       }
     }
   }
+
+
+  # Build environment & Deploy Pre Prod
+  dynamic "stage" {
+    for_each = var.disable_preproduction == "false" ? [1] : []
+    content {
+      name = "Build-Deploy-PreProd"
+      action {
+        name            = "Build-Deploy-PreProduction"
+        category        = "Build"
+        owner           = "AWS"
+        provider        = "CodeBuild"
+        input_artifacts = ["source_output"]
+        version         = "1"
+
+        configuration = {
+          ProjectName   = "${var.function_prefix}-${var.environment_2}-codebuild-project"
+          PrimarySource = "source_output"
+        }
+      }
+    }
+  }
+
+  # Integration Tests II
+  dynamic "stage" {
+    for_each = var.disable_preproduction == "false" ? [1] : []
+    content {
+      name = "Integration-Tests-II"
+      action {
+        name            = "Integration-Tests-II"
+        category        = "Build"
+        owner           = "AWS"
+        provider        = "CodeBuild"
+        input_artifacts = ["source_output"]
+        version         = "1"
+
+        configuration = {
+          ProjectName   = "${var.function_prefix}-${var.component_name_3}-codebuild-project"
+          PrimarySource = "source_output"
+        }
+      }
+    }
 
   # Build environment & Deploy Production - manual approval
   stage {
