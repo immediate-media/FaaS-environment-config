@@ -19,6 +19,11 @@ resource "aws_iam_role_policy" "codebuild_policy" {
     environment        = var.environment,
     function_prefix    = var.function_prefix
   })
+  tags = {
+    Platform = var.platform
+    Env      = var.environment
+    Service  = var.function_name
+  }
 }
 
 resource "aws_iam_role_policy" "codebuild_policy_2" {
@@ -184,5 +189,4 @@ resource "aws_codebuild_project" "codebuild_project" {
       ]
     }
   }
-
 }
