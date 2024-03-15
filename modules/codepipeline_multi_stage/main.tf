@@ -214,6 +214,7 @@ resource "aws_codepipeline" "codepipeline_project" {
         }
       }
     }
+  }
 
   # Build environment & Deploy Production - manual approval
   stage {
