@@ -26,7 +26,8 @@
                 "lambda:*",
                 "codepipeline:*",
                 "acm:ListCertificates",
-                "ec2:DescribeSubnets"
+                "ec2:DescribeSubnets",
+                "events:*"
             ],
             "Resource": "*"
         }
