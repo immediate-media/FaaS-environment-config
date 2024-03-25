@@ -28,7 +28,10 @@
                 "acm:ListCertificates",
                 "ec2:DescribeSubnets",
                 "events:DescribeRule",
-                "events:ListRules"
+                "events:ListRules",
+                "events:PutRule",
+                "events:PutTargets",
+                "events:DeleteRule"
             ],
             "Resource": "*"
         }
