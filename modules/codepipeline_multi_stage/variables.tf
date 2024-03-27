@@ -69,3 +69,15 @@ variable "component_name_3" {
 variable "codestar_connection_arn" {
   description = "Codestar_connection_arn"
 }
+
+variable "disable_staging" {
+  description = "Disable staging environment"
+  type = string
+  default = "false"
+}
+
+variable "disable_preproduction" {
+  description = "Disable preproduction environment"
+  type = string
+  default = "false"
+}
