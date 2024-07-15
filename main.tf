@@ -103,6 +103,7 @@ module "codepipeline_ms" {
   component_name_1 = var.component_name_1
   component_name_2 = var.component_name_2
   component_name_3 = var.component_name_3
+  codestar_connection_arn = "arn:aws:codestar-connections:eu-west-1:566618458053:connection/634da98b-f8b4-46c9-92d6-3f16f0ebf24a"
 }
 
 ###########
