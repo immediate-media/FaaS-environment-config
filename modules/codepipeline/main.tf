@@ -8,7 +8,7 @@ provider "github" {
 }
 
 data "aws_codestarconnections_connection" "github_connection" {
-  arn = aws_codestarconnections_connection.main.arn
+  arn = aws_codestarconnections_connection.github_connection.arn
 }
 
 # IAM Role
