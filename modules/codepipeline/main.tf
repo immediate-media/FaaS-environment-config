@@ -65,7 +65,7 @@ resource "aws_codestarconnections_connection" "github_connection" {
   name          = "codestar-connection"
   provider_type = "GitHub"
   tags = {
-    Platform = "staging"
+    Platform = "${var.platform}"
     Service  = "wcp-services"
     Terraform = "true"
   }
