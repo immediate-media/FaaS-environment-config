@@ -61,15 +61,22 @@ resource "github_repository_webhook" "github_webhook" {
 }
 
 # CodePipeline Connection
-resource "aws_codestarconnections_connection" "github_connection" {
-  name          = "codestar-connection"
-  provider_type = "GitHub"
-  tags = {
-    Platform = "${var.platform}"
-    Service  = "wcp-services"
-    Terraform = "true"
-  }
+
+data "aws_codestarconnections_connection" "github_connection" {
+  name = "codestar-connection"
 }
+
+# resource "aws_codestarconnections_connection" "github_connection" {
+#   name          = "codestar-connection"
+#   provider_type = "GitHub"
+#   tags = {
+#     Platform = "${var.platform}"
+#     Service  = "wcp-services"
+#     Terraform = "true"
+#   }
+# }
+
+
 
 # CodePipeline Project
 resource "aws_codepipeline" "codepipeline_project" {
@@ -99,7 +106,7 @@ resource "aws_codepipeline" "codepipeline_project" {
         Repo       = var.github_repo
         Branch     = var.github_branch
         OAuthToken = var.github_auth_token
-        ConnectionArn = aws_codestarconnections_connection.github_connection.arn
+        ConnectionArn = data.aws_codestarconnections_connection.github_connection.arn
       }
     }
   }
