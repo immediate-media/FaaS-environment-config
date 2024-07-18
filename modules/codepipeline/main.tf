@@ -60,11 +60,6 @@ resource "github_repository_webhook" "github_webhook" {
   events = ["push"]
 }
 
-# CodePipeline Connection
-data "aws_codestarconnections_connection" "github_connection" {
-  name = "codestar-connection"
-}
-
 # CodePipeline Project
 resource "aws_codepipeline" "codepipeline_project" {
   name     = "${var.function_prefix}-${var.environment}-codepipeline"
@@ -93,7 +88,6 @@ resource "aws_codepipeline" "codepipeline_project" {
         Repo       = var.github_repo
         Branch     = var.github_branch
         OAuthToken = var.github_auth_token
-        ConnectionArn = data.aws_codestarconnections_connection.github_connection.arn
       }
     }
   }
