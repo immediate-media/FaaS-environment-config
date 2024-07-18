@@ -7,6 +7,10 @@ provider "github" {
   owner = "immediate-media"
 }
 
+data "aws_codestarconnections_connection" "github_connection" {
+  arn = aws_codestarconnections_connection.main.arn
+}
+
 # IAM Role
 resource "aws_iam_role" "codepipeline_role" {
   name               = "${var.function_prefix}-${var.environment}-codepipeline-role"
@@ -79,7 +83,7 @@ resource "aws_codepipeline" "codepipeline_project" {
       name             = "Source"
       category         = "Source"
       owner            = "ThirdParty"
-      provider         = "GitHub"
+      provider         = "CodeStarSourceConnection"
       version          = "1"
       output_artifacts = ["source_output"]
 
@@ -88,6 +92,7 @@ resource "aws_codepipeline" "codepipeline_project" {
         Repo       = var.github_repo
         Branch     = var.github_branch
         OAuthToken = var.github_auth_token
+        ConnectionArn = data.aws_codestarconnections_connection.github_connection.arn
       }
     }
   }
