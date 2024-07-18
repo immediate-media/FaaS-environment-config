@@ -64,6 +64,11 @@ resource "github_repository_webhook" "github_webhook" {
 resource "aws_codestarconnections_connection" "github_connection" {
   name          = "codestar-connection"
   provider_type = "GitHub"
+  tags = {
+    Platform = "staging"
+    Service  = "wcp-services"
+    Terraform = "true"
+  }
 }
 
 # CodePipeline Project
