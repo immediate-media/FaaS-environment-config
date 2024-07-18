@@ -61,22 +61,9 @@ resource "github_repository_webhook" "github_webhook" {
 }
 
 # CodePipeline Connection
-
 data "aws_codestarconnections_connection" "github_connection" {
   name = "codestar-connection"
 }
-
-# resource "aws_codestarconnections_connection" "github_connection" {
-#   name          = "codestar-connection"
-#   provider_type = "GitHub"
-#   tags = {
-#     Platform = "${var.platform}"
-#     Service  = "wcp-services"
-#     Terraform = "true"
-#   }
-# }
-
-
 
 # CodePipeline Project
 resource "aws_codepipeline" "codepipeline_project" {
@@ -98,7 +85,7 @@ resource "aws_codepipeline" "codepipeline_project" {
       category         = "Source"
       owner            = "ThirdParty"
       provider         = "GitHub"
-      version          = "1"
+      version          = "2"
       output_artifacts = ["source_output"]
 
       configuration = {
