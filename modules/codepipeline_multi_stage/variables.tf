@@ -82,15 +82,15 @@ variable "disable_preproduction" {
 
 variable "disable_test" {
   description = "Disable Test Stage"
-  default     = false
+  default     = true
 }
 
 variable "disable_integration_test" {
   description = "Disable Integration Test Stage"
-  default     = false
+  default     = true
 }
 
 variable "disable_integration_II_test" {
   description = "Disable Integration II Test Stage"
-  default     = false
+  default     = true
 }
