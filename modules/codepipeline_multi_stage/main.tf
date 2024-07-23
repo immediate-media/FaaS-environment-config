@@ -110,7 +110,7 @@ resource "aws_codepipeline" "codepipeline_project" {
   }
 
   dynamic "stage" {
-    for_each = var.disable_test ? [1] : []
+    for_each = var.disable_test ? [] : [1]
     # Run Tests
     content {
       name = "Test"
@@ -132,7 +132,7 @@ resource "aws_codepipeline" "codepipeline_project" {
 
   # Build environment & Deploy Staging
   dynamic "stage" {
-    for_each = var.disable_staging ? [1] : []
+    for_each = var.disable_staging ? [] : [1]
 
     content {
       # Build environment & Deploy Staging
@@ -155,7 +155,7 @@ resource "aws_codepipeline" "codepipeline_project" {
   }
 
   dynamic "stage" {
-    for_each = var.disable_integration_test ? [1] : []
+    for_each = var.disable_integration_test ? [] : [1]
     # Integration Tests
     content {
       name = "Integration-Tests"
@@ -178,7 +178,7 @@ resource "aws_codepipeline" "codepipeline_project" {
 
   # Build environment & Deploy Pre Prod
   dynamic "stage" {
-    for_each = var.disable_preproduction ? [1] : []
+    for_each = var.disable_preproduction ? [] : [1]
     content {
       name = "Build-Deploy-PreProd"
       action {
@@ -199,7 +199,7 @@ resource "aws_codepipeline" "codepipeline_project" {
 
   # Integration Tests II
   dynamic "stage" {
-    for_each = var.disable_integration_II_test ? [1] : []
+    for_each = var.disable_integration_II_test ? [] : [1]
     content {
       name = "Integration-Tests-II"
       action {
