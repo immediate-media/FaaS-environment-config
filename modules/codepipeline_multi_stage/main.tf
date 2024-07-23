@@ -67,7 +67,7 @@ resource "aws_s3_bucket" "function_codepipeline_source_packages" {
 
       apply_server_side_encryption_by_default {
         kms_master_key_id = ""
-        sse_algorithm = "AES256"
+        sse_algorithm     = "AES256"
       }
     }
   }
@@ -109,28 +109,30 @@ resource "aws_codepipeline" "codepipeline_project" {
     }
   }
 
-  # Run tests
-  stage {
-    name = "Test"
+  dynamic "stage" {
+    for_each = var.disable_test ? [var.name] : []
+    # Run Tests
+    content {
+      name = "Test"
+      action {
+        name            = "Test"
+        category        = "Build"
+        owner           = "AWS"
+        provider        = "CodeBuild"
+        input_artifacts = ["source_output"]
+        version         = "1"
 
-    action {
-      name            = "Test"
-      category        = "Build"
-      owner           = "AWS"
-      provider        = "CodeBuild"
-      input_artifacts = ["source_output"]
-      version         = "1"
-
-      configuration = {
-        ProjectName   = "${var.function_prefix}-${var.component_name_1}-codebuild-project"
-        PrimarySource = "source_output"
+        configuration = {
+          ProjectName   = "${var.function_prefix}-${var.component_name_1}-codebuild-project"
+          PrimarySource = "source_output"
+        }
       }
     }
   }
 
   # Build environment & Deploy Staging
   dynamic "stage" {
-    for_each = var.disable_staging == "false" ? [1] : []
+    for_each = var.disable_staging ? [var.name] : []
 
     content {
       # Build environment & Deploy Staging
@@ -153,7 +155,7 @@ resource "aws_codepipeline" "codepipeline_project" {
   }
 
   dynamic "stage" {
-    for_each = var.disable_staging == "false" ? [1] : []
+    for_each = var.disable_integration_test ? [var.name] : []
     # Integration Tests
     content {
       name = "Integration-Tests"
@@ -176,7 +178,7 @@ resource "aws_codepipeline" "codepipeline_project" {
 
   # Build environment & Deploy Pre Prod
   dynamic "stage" {
-    for_each = var.disable_preproduction == "false" ? [1] : []
+    for_each = var.disable_preproduction ? [var.name] : []
     content {
       name = "Build-Deploy-PreProd"
       action {
@@ -197,7 +199,7 @@ resource "aws_codepipeline" "codepipeline_project" {
 
   # Integration Tests II
   dynamic "stage" {
-    for_each = var.disable_preproduction == "false" ? [1] : []
+    for_each = var.disable_integration_II_test ? [var.name] : []
     content {
       name = "Integration-Tests-II"
       action {

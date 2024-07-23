@@ -71,13 +71,26 @@ variable "codestar_connection_arn" {
 }
 
 variable "disable_staging" {
-  description = "Disable staging environment"
-  type = string
-  default = "false"
+  description = "Disable staging stage"
+  default     = false
 }
 
 variable "disable_preproduction" {
-  description = "Disable preproduction environment"
-  type = string
-  default = "false"
+  description = "Disable preproduction stage"
+  default     = false
+}
+
+variable "disable_test" {
+  description = "Disable Test Stage"
+  default     = false
+}
+
+variable "disable_integration_test" {
+  description = "Disable Integration Test Stage"
+  default     = false
+
+  variable "disable_integration_II_test" {
+    description = "Disable Integration II Test Stage"
+    default     = false
+  }
 }
