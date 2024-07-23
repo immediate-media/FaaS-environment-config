@@ -88,9 +88,9 @@ variable "disable_test" {
 variable "disable_integration_test" {
   description = "Disable Integration Test Stage"
   default     = false
+}
 
-  variable "disable_integration_II_test" {
-    description = "Disable Integration II Test Stage"
-    default     = false
-  }
+variable "disable_integration_II_test" {
+  description = "Disable Integration II Test Stage"
+  default     = false
 }
