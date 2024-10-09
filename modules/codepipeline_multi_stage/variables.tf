@@ -129,5 +129,5 @@ variable "s3_object_key" {
 variable "source_provider" {
   description = "The provider of the service being called by the action. Valid providers are determined by the action category."
   type        = string
-  default     = "github_immediate_media
+  default     = "github_immediate_media"
 }
