@@ -114,12 +114,8 @@ resource "aws_codepipeline" "codepipeline_project" {
       version          = "1"
       output_artifacts = ["source_output"]
 
-      configuration = {
-        ConnectionArn    = var.codestar_connection_arn
-        FullRepositoryId = "immediate-media/${var.github_repo}"
-        BranchName       = var.github_branch
-        configuration = lookup(local.source_config, var.source_provider)
-      }
+      configuration = lookup(local.source_config, var.source_provider)
+      
     }
   }
 
