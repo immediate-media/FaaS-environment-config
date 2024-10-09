@@ -1,19 +1,4 @@
-locals{
-     source_config = {
-     CodeStarSourceConnection = {
-      ConnectionArn        = coalesce(var.codestar_ghec_connection_arn, var.codestar_connection_arn)
-      FullRepositoryId     = var.github_public_repo
-      BranchName           = var.github_public_branch
-      OutputArtifactFormat = "CODEBUILD_CLONE_REF"
-    },
-    S3 = {
-      S3Bucket    = var.s3_bucket
-      S3ObjectKey = var.s3_object_key
-    }
-  }
-}
-
-  provider "github" {
+provider "github" {
   token = var.github_auth_token
   owner = "immediate-media"
 }
@@ -104,9 +89,14 @@ resource "aws_codepipeline" "codepipeline_project" {
       provider         = "GitHub"
       version          = "1"
       output_artifacts = ["source_output"]
-      
-        configuration = lookup(local.source_config, var.source_provider)
+
+      configuration = {
+        Owner      = "immediate-media"
+        Repo       = var.github_repo
+        Branch     = var.github_branch
+        OAuthToken = var.github_auth_token
       }
+    }
   }
 
   # Build environment

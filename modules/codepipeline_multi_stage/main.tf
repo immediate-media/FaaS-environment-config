@@ -1,3 +1,16 @@
+locals{
+     source_config = {
+     CodeStarSourceConnection = {
+      ConnectionArn        = coalesce(var.codestar_ghec_connection_arn, var.codestar_connection_arn)
+      OutputArtifactFormat = "CODEBUILD_CLONE_REF"
+    },
+    S3 = {
+      S3Bucket    = var.s3_bucket
+      S3ObjectKey = var.s3_object_key
+    }
+  }
+}
+
 provider "github" {
   token = var.github_auth_token
   owner = "immediate-media"
@@ -105,6 +118,7 @@ resource "aws_codepipeline" "codepipeline_project" {
         ConnectionArn    = var.codestar_connection_arn
         FullRepositoryId = "immediate-media/${var.github_repo}"
         BranchName       = var.github_branch
+        configuration = lookup(local.source_config, var.source_provider)
       }
     }
   }
