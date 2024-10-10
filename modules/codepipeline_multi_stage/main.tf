@@ -8,6 +8,8 @@ locals{
       S3Bucket    = var.s3_bucket
       S3ObjectKey = var.s3_object_key
     },
+    github_immediate_media = {
+      }
   }
 }
 
