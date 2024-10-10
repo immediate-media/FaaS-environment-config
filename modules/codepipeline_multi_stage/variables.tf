@@ -100,10 +100,6 @@ variable "codestar_ghec_connection_arn" {
   default     = null
 }
 
-variable "codestar_connection_arn" {
-  description = "GitHub connection arn to trigger codepipeline"
-  default     = null
-}
 
 variable "github_public_repo" {
   description = "Public Git repo to look for source code"
