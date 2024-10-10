@@ -8,11 +8,6 @@ locals{
       S3Bucket    = var.s3_bucket
       S3ObjectKey = var.s3_object_key
     },
-    github_immediate_media = {
-        ConnectionArn      = var.codestar_connection_arn
-        FullRepositoryId   = "immediate-media/${var.github_repo}"
-        BranchName         = var.github_branch
-      }
   }
 }
 
