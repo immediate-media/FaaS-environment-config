@@ -37,6 +37,7 @@ resource "aws_iam_role_policy" "pipeline_policy" {
 
 # CodePipeline Webhook
 resource "aws_codepipeline_webhook" "codepipeline_webhook" {
+  count           = var.source_provider == "github_immediate_media" ? 1 : 0
   name            = "${var.function_prefix}-codepipeline-webhook"
   authentication  = "GITHUB_HMAC"
   target_action   = "Source"
@@ -62,6 +63,7 @@ resource "aws_codepipeline_webhook" "codepipeline_webhook" {
 
 # GitHub Webhook
 resource "github_repository_webhook" "github_webhook" {
+  count      = var.source_provider == "github_immediate_media" ? 1 : 0
   repository = var.github_repo
 
   configuration {
