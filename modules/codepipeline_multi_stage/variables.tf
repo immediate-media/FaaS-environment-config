@@ -127,9 +127,3 @@ variable "source_provider" {
   type        = string
   default     = "github_immediate_media"
 }
-
-variable "source_provider" {
-  description = "The provider of the service being called by the action. Valid providers are determined by the action category."
-  type        = string
-  default     = "S3"
-}
