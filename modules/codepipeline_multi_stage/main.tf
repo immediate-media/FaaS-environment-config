@@ -43,6 +43,7 @@ resource "aws_codepipeline_webhook" "codepipeline_webhook" {
   target_action   = "Source"
   target_pipeline = aws_codepipeline.codepipeline_project.name
 
+
   lifecycle {
     ignore_changes = [
       authentication_configuration
@@ -62,7 +63,7 @@ resource "aws_codepipeline_webhook" "codepipeline_webhook" {
 
 # GitHub Webhook
 resource "github_repository_webhook" "github_webhook" {
-  count      = var.source_provider == "github_immediate_media" ? 1 : 0
+  count      = var.source_provider == "git::https://github.com/immediatemediaco/openweb-proxy-lambda.git" ? 1 : 0
   repository = var.github_repo
 
   configuration {
@@ -75,9 +76,6 @@ resource "github_repository_webhook" "github_webhook" {
   events = ["push"]
 }
 
-Error: POST https://api.github.com/repos/immediate-media/openweb-proxy-lambda/hooks: 404 Not Found []
-with module.codepipeline-openweb-proxy-lambda.github_repository_webhook.github_webhook[0]
-on .terraform/modules/codepipeline-openweb-proxy-lambda/modules/codepipeline_multi_stage/main.tf line 65, in resource "github_repository_webhook" "github_webhook":
 # CodePipeline Source Bucket
 resource "aws_s3_bucket" "function_codepipeline_source_packages" {
   bucket = "${var.function_prefix}-codepipeline-source-packages"
