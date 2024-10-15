@@ -40,7 +40,7 @@ variable "github_organization" {
 
 variable "github_repo" {
   description = "The GitHub repo to source the codebase for you function from"
-  default     = "immediatemediaco/openweb-proxy-lambda"
+  default     = "openweb-proxy-lambda"
 }
 
 variable "github_branch" {

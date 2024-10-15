@@ -1,7 +1,7 @@
 locals{
      source_config = {
      CodeStarSourceConnection = {
-      ConnectionArn        = coalesce(var.codestar_ghec_connection_arn, var.codestar_connection_arn)
+      codestar_connection_arn           = aws_codestarconnections_connection.codepipeline_codestarconnection.arn
       OutputArtifactFormat = "CODEBUILD_CLONE_REF"
     },
     S3 = {
@@ -9,9 +9,9 @@ locals{
       S3ObjectKey = var.s3_object_key
     },
     github_immediate_media = {
-        ConnectionArn    = var.codestar_connection_arn
-        FullRepositoryId = "immediate-media/${var.github_repo}"
-        BranchName       = var.github_branch
+        codestar_connection_arn   = var.codestar_connection_arn
+        FullRepositoryId          = "immediatemediaco/${var.github_repo}"
+        BranchName                = var.github_branch
       }
   }
 }
