@@ -1,8 +1,8 @@
 locals{
      source_config = {
      CodeStarSourceConnection = {
-      codestar_connection_arn           = aws_codestarconnections_connection.codepipeline_codestarconnection.arn
-      OutputArtifactFormat = "CODEBUILD_CLONE_REF"
+      codestar_connection_arn = coalesce(var.codestar_ghec_connection_arn, var.codestar_connection_arn)
+      OutputArtifactFormat    = "CODEBUILD_CLONE_REF"
     },
     S3 = {
       S3Bucket    = var.s3_bucket
