@@ -69,7 +69,6 @@ variable "component_name_3" {
 
 variable "codestar_connection_arn" {
   description = "Codestar_connection_arn"
-  default     = "aws_codestarconnections_connection.codepipeline_codestarconnection.arn"
 }
 
 variable "disable_staging" {
