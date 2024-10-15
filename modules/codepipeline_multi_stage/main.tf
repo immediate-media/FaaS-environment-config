@@ -9,7 +9,7 @@ locals{
       S3ObjectKey = var.s3_object_key
     },
     github_immediate_media = {
-        codestar_connection_arn   = var.codestar_connection_arn
+        codestar_connection_arn   = aws_codestarconnections_connection.codepipeline_codestarconnection.arn
         FullRepositoryId          = "immediatemediaco/${var.github_repo}"
         BranchName                = var.github_branch
       }
