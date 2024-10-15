@@ -63,7 +63,7 @@ resource "aws_codepipeline_webhook" "codepipeline_webhook" {
 
 # GitHub Webhook
 resource "github_repository_webhook" "github_webhook" {
-  count      = var.source_provider == "git::https://github.com/immediatemediaco/openweb-proxy-lambda.git" ? 1 : 0
+  count      = var.source_provider == "github_immediate_media" ? 1 : 0
   repository = var.github_repo
 
   configuration {
