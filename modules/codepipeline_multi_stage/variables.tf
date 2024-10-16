@@ -36,6 +36,7 @@ variable "github_auth_token" {
 
 variable "github_organization" {
   description = "You GitHub organisation"
+  default = "immediate-media"
 }
 
 variable "github_repo" {
@@ -69,6 +70,7 @@ variable "component_name_3" {
 
 variable "codestar_connection_arn" {
   description = "Codestar_connection_arn"
+  default     = "aws_codestarconnections_connection.codepipeline_codestarconnection.arn"
 }
 
 variable "disable_staging" {

@@ -1,16 +1,18 @@
 locals{
-     source_config = {
-     CodeStarSourceConnection = {
-      codestar_connection_arn = coalesce(var.codestar_ghec_connection_arn, aws_codestarconnections_connection.codepipeline_codestarconnection.arn)
-      OutputArtifactFormat    = "CODEBUILD_CLONE_REF"
+  source_config = {
+    CodeStarSourceConnection = {
+      ConnectionArn        = var.codestar_connection_arn
+      FullRepositoryId     = var.github_repo
+      BranchName           = var.github_branch
+      OutputArtifactFormat = "CODEBUILD_CLONE_REF"
     },
     S3 = {
       S3Bucket    = var.s3_bucket
       S3ObjectKey = var.s3_object_key
     },
     github_immediate_media = {
-        codestar_connection_arn   = aws_codestarconnections_connection.codepipeline_codestarconnection.arn
-        FullRepositoryId          = "immediatemediaco/${var.github_repo}"
+        ConnectionArn   = var.codestar_connection_arn
+        FullRepositoryId          = "${var.github_organization}/${var.github_repo}"
         BranchName                = var.github_branch
       }
   }
@@ -18,7 +20,7 @@ locals{
 
 provider "github" {
   token = var.github_auth_token
-  owner = "immediate-media"
+  owner = var.github_organization
 }
 
 # IAM Role
@@ -37,7 +39,6 @@ resource "aws_iam_role_policy" "pipeline_policy" {
 
 # CodePipeline Webhook
 resource "aws_codepipeline_webhook" "codepipeline_webhook" {
-  count           = var.source_provider == "github_immediate_media" ? 1 : 0
   name            = "${var.function_prefix}-codepipeline-webhook"
   authentication  = "GITHUB_HMAC"
   target_action   = "Source"
@@ -63,13 +64,12 @@ resource "aws_codepipeline_webhook" "codepipeline_webhook" {
 
 # GitHub Webhook
 resource "github_repository_webhook" "github_webhook" {
-  count      = var.source_provider == "github_immediate_media" ? 1 : 0
   repository = var.github_repo
 
   configuration {
-    url          = aws_codepipeline_webhook.codepipeline_webhook[count.index].url
-    content_type = "form"
-    insecure_ssl = true
+    url          = aws_codepipeline_webhook.codepipeline_webhook.url
+    content_type = "json"
+    # insecure_ssl = true
     secret       = var.webhook_secret
   }
 
