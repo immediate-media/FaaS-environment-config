@@ -36,11 +36,11 @@ variable "github_auth_token" {
 
 variable "github_organization" {
   description = "You GitHub organisation"
+  default = "immediate-media"
 }
 
 variable "github_repo" {
   description = "The GitHub repo to source the codebase for you function from"
-  default     = "openweb-proxy-lambda"
 }
 
 variable "github_branch" {
