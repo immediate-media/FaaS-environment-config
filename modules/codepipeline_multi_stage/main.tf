@@ -1,6 +1,26 @@
+locals{
+  source_config = {
+    CodeStarSourceConnection = {
+      ConnectionArn        = var.codestar_connection_arn
+      FullRepositoryId     = var.github_repo
+      BranchName           = var.github_branch
+      OutputArtifactFormat = "CODEBUILD_CLONE_REF"
+    },
+    S3 = {
+      S3Bucket    = var.s3_bucket
+      S3ObjectKey = var.s3_object_key
+    },
+    github_immediate_media = {
+        ConnectionArn   = var.codestar_connection_arn
+        FullRepositoryId          = "${var.github_organization}/${var.github_repo}"
+        BranchName                = var.github_branch
+      }
+  }
+}
+
 provider "github" {
   token = var.github_auth_token
-  owner = "immediate-media"
+  owner = var.github_organization
 }
 
 # IAM Role
@@ -48,8 +68,8 @@ resource "github_repository_webhook" "github_webhook" {
 
   configuration {
     url          = aws_codepipeline_webhook.codepipeline_webhook.url
-    content_type = "form"
-    insecure_ssl = true
+    content_type = "json"
+    # insecure_ssl = true
     secret       = var.webhook_secret
   }
 
@@ -101,11 +121,8 @@ resource "aws_codepipeline" "codepipeline_project" {
       version          = "1"
       output_artifacts = ["source_output"]
 
-      configuration = {
-        ConnectionArn    = var.codestar_connection_arn
-        FullRepositoryId = "immediate-media/${var.github_repo}"
-        BranchName       = var.github_branch
-      }
+      configuration = lookup(local.source_config, var.source_provider)
+      
     }
   }
 
