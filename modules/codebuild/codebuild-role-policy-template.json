@@ -24,6 +24,11 @@
         "arn:aws:s3:::${function_prefix}-codepipeline-source-packages",
         "arn:aws:s3:::${function_prefix}-codepipeline-source-packages/*"
       ]
+    },
+    {
+        "Effect": "Allow",
+        "Action": "codestar-connections:UseConnection",
+        "Resource": "*"
     }
   ]
 }
