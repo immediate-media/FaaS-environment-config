@@ -1,8 +1,8 @@
-locals{
+locals {
   source_config = {
     CodeStarSourceConnection = {
       ConnectionArn        = var.codestar_connection_arn
-      FullRepositoryId     = var.github_repo
+      FullRepositoryId     = "${github_organization}/${var.github_repo}"
       BranchName           = var.github_branch
       OutputArtifactFormat = "CODEBUILD_CLONE_REF"
     },
@@ -11,10 +11,10 @@ locals{
       S3ObjectKey = var.s3_object_key
     },
     github_immediate_media = {
-        ConnectionArn   = var.codestar_connection_arn
-        FullRepositoryId          = "${var.github_organization}/${var.github_repo}"
-        BranchName                = var.github_branch
-      }
+      ConnectionArn    = var.codestar_connection_arn
+      FullRepositoryId = "${var.github_organization}/${var.github_repo}"
+      BranchName       = var.github_branch
+    }
   }
 }
 
@@ -70,7 +70,7 @@ resource "github_repository_webhook" "github_webhook" {
     url          = aws_codepipeline_webhook.codepipeline_webhook.url
     content_type = "json"
     # insecure_ssl = true
-    secret       = var.webhook_secret
+    secret = var.webhook_secret
   }
 
   events = ["push"]
@@ -122,7 +122,7 @@ resource "aws_codepipeline" "codepipeline_project" {
       output_artifacts = ["source_output"]
 
       configuration = lookup(local.source_config, var.source_provider)
-      
+
     }
   }
 
