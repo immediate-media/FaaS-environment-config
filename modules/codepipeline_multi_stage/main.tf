@@ -2,7 +2,7 @@ locals {
   source_config = {
     CodeStarSourceConnection = {
       ConnectionArn        = var.codestar_connection_arn
-      FullRepositoryId     = "${github_organization}/${var.github_repo}"
+      FullRepositoryId     = "${var.github_organization}/${var.github_repo}"
       BranchName           = var.github_branch
       OutputArtifactFormat = "CODEBUILD_CLONE_REF"
     },
