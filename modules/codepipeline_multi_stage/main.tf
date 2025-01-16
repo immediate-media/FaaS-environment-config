@@ -69,7 +69,7 @@ resource "github_repository_webhook" "github_webhook" {
   configuration {
     url          = aws_codepipeline_webhook.codepipeline_webhook.url
     content_type = "json"
-    # insecure_ssl = true
+    insecure_ssl = true
     secret = var.webhook_secret
   }
 
