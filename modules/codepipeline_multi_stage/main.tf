@@ -4,16 +4,16 @@ locals {
       ConnectionArn        = var.codestar_connection_arn
       FullRepositoryId     = "${var.github_organization}/${var.github_repo}"
       BranchName           = var.github_branch
-      OutputArtifactFormat = "CODEBUILD_CLONE_REF"
+      # OutputArtifactFormat = "CODEBUILD_CLONE_REF"
     },
     S3 = {
       S3Bucket    = var.s3_bucket
       S3ObjectKey = var.s3_object_key
-    },
-    github_immediate_media = {
-      ConnectionArn    = var.codestar_connection_arn
-      FullRepositoryId = "${var.github_organization}/${var.github_repo}"
-      BranchName       = var.github_branch
+    # },
+    # github_immediate_media = {
+    #   ConnectionArn    = var.codestar_connection_arn
+    #   FullRepositoryId = "${var.github_organization}/${var.github_repo}"
+    #   BranchName       = var.github_branch
     }
   }
 }
@@ -37,44 +37,44 @@ resource "aws_iam_role_policy" "pipeline_policy" {
   })
 }
 
-# CodePipeline Webhook
-resource "aws_codepipeline_webhook" "codepipeline_webhook" {
-  name            = "${var.function_prefix}-codepipeline-webhook"
-  authentication  = "GITHUB_HMAC"
-  target_action   = "Source"
-  target_pipeline = aws_codepipeline.codepipeline_project.name
+# # CodePipeline Webhook
+# resource "aws_codepipeline_webhook" "codepipeline_webhook" {
+#   name            = "${var.function_prefix}-codepipeline-webhook"
+#   authentication  = "GITHUB_HMAC"
+#   target_action   = "Source"
+#   target_pipeline = aws_codepipeline.codepipeline_project.name
 
 
-  lifecycle {
-    ignore_changes = [
-      authentication_configuration
-    ]
-  }
+#   lifecycle {
+#     ignore_changes = [
+#       authentication_configuration
+#     ]
+#   }
 
-  authentication_configuration {
-    secret_token     = var.webhook_secret
-    allowed_ip_range = var.webhook_ip_range
-  }
+#   authentication_configuration {
+#     secret_token     = var.webhook_secret
+#     allowed_ip_range = var.webhook_ip_range
+#   }
 
-  filter {
-    json_path    = "$.ref"
-    match_equals = "refs/heads/${var.github_branch}"
-  }
-}
+#   filter {
+#     json_path    = "$.ref"
+#     match_equals = "refs/heads/${var.github_branch}"
+#   }
+# }
 
-# GitHub Webhook
-resource "github_repository_webhook" "github_webhook" {
-  repository = var.github_repo
+# # GitHub Webhook
+# resource "github_repository_webhook" "github_webhook" {
+#   repository = var.github_repo
 
-  configuration {
-    url          = aws_codepipeline_webhook.codepipeline_webhook.url
-    content_type = "json"
-    insecure_ssl = true
-    secret = var.webhook_secret
-  }
+#   configuration {
+#     url          = aws_codepipeline_webhook.codepipeline_webhook.url
+#     content_type = "json"
+#     insecure_ssl = true
+#     secret = var.webhook_secret
+#   }
 
-  events = ["push"]
-}
+#   events = ["push"]
+# }
 
 # CodePipeline Source Bucket
 resource "aws_s3_bucket" "function_codepipeline_source_packages" {
