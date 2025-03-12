@@ -79,23 +79,27 @@ resource "aws_iam_role_policy" "pipeline_policy" {
 # CodePipeline Source Bucket
 resource "aws_s3_bucket" "function_codepipeline_source_packages" {
   bucket = "${var.function_prefix}-codepipeline-source-packages"
-  acl    = "private"
-
-  server_side_encryption_configuration {
-    rule {
-      bucket_key_enabled = false
-
-      apply_server_side_encryption_by_default {
-        kms_master_key_id = ""
-        sse_algorithm     = "AES256"
-      }
-    }
-  }
 
   tags = {
     Name     = "${var.function_name} CodePipeline source packages"
     Platform = var.platform
   }
+}
+
+resource "aws_s3_bucket_server_side_encryption_configuration" "function_codepipeline_source_packages" {
+  bucket = aws_s3_bucket.function_codepipeline_source_packages.bucket
+
+  rule {
+    apply_server_side_encryption_by_default {
+      kms_master_key_id = ""
+      sse_algorithm     = "AES256"
+    }
+  }
+}
+
+resource "aws_s3_bucket_acl" "function_codepipeline_source_packages" {
+  bucket = aws_s3_bucket.function_codepipeline_source_packages.bucket
+  acl    = "private"
 }
 
 # CodePipeline Project

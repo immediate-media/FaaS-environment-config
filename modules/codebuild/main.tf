@@ -113,24 +113,28 @@ resource "aws_iam_role_policy" "codebuild_vpc_access" {
 # CodeBuild Cache Bucket
 resource "aws_s3_bucket" "function_codebuild_cache" {
   bucket = "${var.function_prefix}-${var.environment}-codebuild-cache"
-  acl    = "private"
-
-  server_side_encryption_configuration {
-    rule {
-      bucket_key_enabled = false
-
-      apply_server_side_encryption_by_default {
-        kms_master_key_id = ""
-        sse_algorithm     = "AES256"
-      }
-    }
-  }
 
   tags = {
     Name        = "${var.function_name} ${var.environment} CodeBuild cache"
     Platform    = var.platform
     Environment = var.environment
   }
+}
+
+resource "aws_s3_bucket_server_side_encryption_configuration" "function_codebuild_cache" {
+  bucket = aws_s3_bucket.function_codebuild_cache.bucket
+
+  rule {
+    apply_server_side_encryption_by_default {
+      kms_master_key_id = ""
+      sse_algorithm     = "AES256"
+    }
+  }
+}
+
+resource "aws_s3_bucket_acl" "function_codebuild_cache" {
+  bucket = aws_s3_bucket.function_codebuild_cache.bucket
+  acl    = "private"
 }
 
 # CodeBuild Project
