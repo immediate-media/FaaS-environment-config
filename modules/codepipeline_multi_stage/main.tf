@@ -77,11 +77,6 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "function_codepipe
   }
 }
 
-resource "aws_s3_bucket_acl" "function_codepipeline_source_packages" {
-  bucket = aws_s3_bucket.function_codepipeline_source_packages.bucket
-  acl    = "private"
-}
-
 # CodePipeline Project
 resource "aws_codepipeline" "codepipeline_project" {
   name     = "${var.function_prefix}-codepipeline"
