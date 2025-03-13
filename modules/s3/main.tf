@@ -9,11 +9,6 @@ resource "aws_s3_bucket" "function_codepipeline_source_packages" {
   }
 }
 
-resource "aws_s3_bucket_acl" "function_codepipeline_source_packages" {
-  bucket = aws_s3_bucket.function_codepipeline_source_packages.bucket
-  acl    = "private"
-}
-
 resource "aws_s3_bucket" "function_codebuild_cache" {
   bucket = "${var.function_prefix}-${var.environment}-codebuild-cache"
 
@@ -23,9 +18,4 @@ resource "aws_s3_bucket" "function_codebuild_cache" {
     Env      = var.environment
     Service  = var.function_name
   }
-}
-
-resource "aws_s3_bucket_acl" "function_codebuild_cache" {
-  bucket = aws_s3_bucket.function_codebuild_cache.bucket
-  acl    = "private"
 }
