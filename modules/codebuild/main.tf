@@ -132,6 +132,11 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "function_codebuil
   }
 }
 
+resource "aws_s3_bucket_acl" "function_codebuild_cache" {
+  bucket = aws_s3_bucket.function_codebuild_cache.bucket
+  acl    = "private"
+}
+
 # CodeBuild Project
 resource "aws_codebuild_project" "codebuild_project" {
   name         = "${var.function_prefix}-${var.environment}-codebuild-project"
