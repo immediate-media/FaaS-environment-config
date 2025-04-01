@@ -1,8 +1,3 @@
-provider "github" {
-  token = var.github_auth_token
-  owner = "immediate-media"
-}
-
 # IAM Role
 resource "aws_iam_role" "codepipeline_role" {
   name               = "${var.function_prefix}-codepipeline-role"
