@@ -1,5 +1,20 @@
 provider "aws" {
   region = var.region
+  default_tags {
+    tags = local.mandatory_tags {
+    }
+  }
+}
+
+locals {
+  mandatory_tags = {
+    Env       = var.environment
+    Platform  = var.platform
+    Terraform = "true"
+    Team      = "polaris"
+    Workspace = terraform.workspace
+    Service   = var.function_name
+  }
 }
 ##########
 ### S3 ###
@@ -135,3 +150,5 @@ module "iam" {
   use_api_auth       = var.use_api_auth
   remote_account_id  = var.remote_account_id
 }
+
+

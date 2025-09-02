@@ -16,12 +16,9 @@ resource "aws_kms_key" "kms_key" {
 
   description = var.function_name
 
-  tags = {
-    Name     = "${var.function_name} ${var.environment} API Key"
-    Platform = var.platform
-    Env      = var.environment
-    Service  = var.function_name
-  }
+  tags = merge(local.mandatory_tags, 
+    { Name = "${var.function_name} ${var.environment} API Key" }
+  )
 }
 
 resource "aws_kms_alias" "kms_alias" {
@@ -39,10 +36,7 @@ resource "aws_ssm_parameter" "ssm_ps_prod" {
   key_id = aws_kms_key.kms_key[0].arn
   value  = local.api_auth_token
 
-  tags = {
-    Name     = "${var.function_name} ${var.environment} API Key"
-    Platform = var.platform
-    Env      = var.environment
-    Service  = var.function_name
-  }
+  tags = merge(local.mandatory_tags, 
+    { Name = "${var.function_name} ${var.environment} API Key" }
+  )
 }

@@ -2,11 +2,6 @@
 resource "aws_iam_role" "codebuild_role" {
   name               = "${var.function_prefix}-${var.environment}-codebuild-role"
   assume_role_policy = file("${path.module}/codebuild-role-template.json")
-  tags = {
-    Platform = var.platform
-    Env      = var.environment
-    Service  = var.function_name
-  }
 }
 
 # IAM polices
@@ -114,11 +109,9 @@ resource "aws_iam_role_policy" "codebuild_vpc_access" {
 resource "aws_s3_bucket" "function_codebuild_cache" {
   bucket = "${var.function_prefix}-${var.environment}-codebuild-cache"
 
-  tags = {
-    Name        = "${var.function_name} ${var.environment} CodeBuild cache"
-    Platform    = var.platform
-    Environment = var.environment
-  }
+  tags = merge(local.mandatory_tags, 
+    { Name = "${var.function_name} ${var.environment} CodeBuild cache" }
+  )
 }
 
 resource "aws_s3_bucket_server_side_encryption_configuration" "function_codebuild_cache" {
@@ -166,12 +159,6 @@ resource "aws_codebuild_project" "codebuild_project" {
     type      = "CODEPIPELINE"
     buildspec = var.buildspec_name
   }
-  tags = {
-    Platform = var.platform
-    Env      = var.environment
-    Service  = var.function_name
-  }
-
   # include the vpc config if the vpc_id is set
   dynamic "vpc_config" {
     for_each = var.vpc_id != "" ? [1] : []
