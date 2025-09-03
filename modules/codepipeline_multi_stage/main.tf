@@ -60,9 +60,9 @@ resource "github_repository_webhook" "github_webhook" {
 resource "aws_s3_bucket" "function_codepipeline_source_packages" {
   bucket = "${var.function_prefix}-codepipeline-source-packages"
 
-  tags = merge(local.mandatory_tags,
-    {  Name = "${var.function_name} CodePipeline source packages" }
-  )
+  tags = {  
+    Name = "${var.function_name} CodePipeline source packages" 
+  }
 }
 
 resource "aws_s3_bucket_server_side_encryption_configuration" "function_codepipeline_source_packages" {

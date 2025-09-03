@@ -11,7 +11,7 @@ locals {
     Env       = var.environment
     Platform  = var.platform
     Terraform = "true"
-    Team      = "polaris"
+    Team      = var.team
     Workspace = terraform.workspace
     Service   = var.function_name
   }
