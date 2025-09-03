@@ -36,7 +36,7 @@ resource "aws_ssm_parameter" "ssm_ps_prod" {
   key_id = aws_kms_key.kms_key[0].arn
   value  = local.api_auth_token
 
-  tags = merge(local.mandatory_tags, 
-    { Name = "${var.function_name} ${var.environment} API Key" }
-  )
+  tags = { 
+     Name = "${var.function_name} ${var.environment} API Key" 
+  }
 }
