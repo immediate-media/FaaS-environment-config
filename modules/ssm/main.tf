@@ -16,9 +16,9 @@ resource "aws_kms_key" "kms_key" {
 
   description = var.function_name
 
-  tags = merge(local.mandatory_tags, 
-    { Name = "${var.function_name} ${var.environment} API Key" }
-  )
+  tags = {
+    Name = "${var.function_name} ${var.environment} API Key" 
+  }
 }
 
 resource "aws_kms_alias" "kms_alias" {
