@@ -1,20 +1,5 @@
 provider "aws" {
   region = var.region
-  default_tags {
-    tags = local.mandatory_tags {
-    }
-  }
-}
-
-locals {
-  mandatory_tags = {
-    Env       = var.environment
-    Platform  = var.environment
-    Terraform = "true"
-    Team      = var.team
-    Workspace = terraform.workspace
-    Service   = var.function_name
-  }
 }
 ##########
 ### S3 ###
