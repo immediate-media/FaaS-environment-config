@@ -10,7 +10,7 @@ module "s3" {
   function_name           = var.function_name
   function_prefix         = var.function_prefix
   region                  = var.region
-  platform                = var.environment
+  platform                = var.platform
   environment             = var.environment
   use_codepipeline_bucket = var.use_codepipeline_bucket
 }
@@ -25,7 +25,7 @@ module "codebuild" {
   function_prefix              = var.function_prefix
   aws_account_number           = var.aws_account_number
   region                       = var.region
-  platform                     = var.environment
+  platform                     = var.platform
   environment                  = var.environment
 
   environment_image            = var.environment_image
@@ -45,7 +45,7 @@ module "codebuild" {
   remote_account_id   = var.remote_account_id
   remote_account_role = var.remote_account_role
   region              = var.region
-  platform            = var.environment
+  platform            = var.platform
   environment         = var.environment
 
   environment_image     = var.environment_image
@@ -67,7 +67,7 @@ module "codepipeline" {
   function_name   = var.function_name
   function_prefix = var.function_prefix
   region          = var.region
-  platform        = var.environment
+  platform        = var.platform
   environment     = var.environment
 
   github_base_url     = var.github_base_url
@@ -87,7 +87,7 @@ module "codepipeline_ms" {
   function_name   = var.function_name
   function_prefix = var.function_prefix
   region          = var.region
-  platform        = var.environment
+  platform        = var.platform
   environment_1   = var.environment_1
   environment_2   = var.environment_2
   environment_3   = var.environment_3
@@ -114,7 +114,7 @@ module "ssm" {
   function_name   = var.function_name
   function_prefix = var.function_prefix
   region          = var.region
-  platform        = var.environment
+  platform        = var.platform
   environment     = var.environment
 
   use_api_auth   = var.use_api_auth
