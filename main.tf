@@ -135,5 +135,3 @@ module "iam" {
   use_api_auth       = var.use_api_auth
   remote_account_id  = var.remote_account_id
 }
-
-
