@@ -22,10 +22,6 @@ variable "environment" {
   description = "Environment name"
 }
 
-variable "stage" {
-  description = "stage name"
-}
-
 variable "environment_image" {
   description = "Which Docker image to use as your build environment"
   type        = string
