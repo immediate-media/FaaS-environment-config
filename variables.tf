@@ -29,6 +29,10 @@ variable "platform" {
   description = "Platform identifier."
 }
 
+variable "stage" {
+  default = ""
+}
+
 variable "remote_account_access_key" {
   type        = string
   description = "The access key used to access a remote account"
