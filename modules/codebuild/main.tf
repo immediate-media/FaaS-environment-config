@@ -1,23 +1,23 @@
 # IAM Role
 resource "aws_iam_role" "codebuild_role" {
-  name               = "${var.function_prefix}-${var.stage}-codebuild-role"
+  name               = "${var.function_prefix}-${var.environment}-codebuild-role"
   assume_role_policy = file("${path.module}/codebuild-role-template.json")
 }
 
 # IAM polices
 resource "aws_iam_role_policy" "codebuild_policy" {
-  name = "${var.function_prefix}-${var.stage}-codebuild-base-policy"
+  name = "${var.function_prefix}-${var.environment}-codebuild-base-policy"
   role = aws_iam_role.codebuild_role.id
   policy = templatefile("${path.module}/codebuild-role-policy-template.json", {
     aws_account_number = var.aws_account_number,
     region             = var.region,
-    environment        = var.stage,
+    environment        = var.environment,
     function_prefix    = var.function_prefix
   })
 }
 
 resource "aws_iam_role_policy" "codebuild_policy_2" {
-  name   = "${var.function_prefix}-${var.stage}-codebuild-serverless-policy"
+  name   = "${var.function_prefix}-${var.environment}-codebuild-serverless-policy"
   role   = aws_iam_role.codebuild_role.id
   policy = file("${path.module}/serverless-role-policy-template.json")
 }
@@ -25,19 +25,19 @@ resource "aws_iam_role_policy" "codebuild_policy_2" {
 resource "aws_iam_role_policy" "codebuild_policy_3" {
   count = var.use_api_auth ? 1 : 0
 
-  name = "${var.function_prefix}-${var.stage}-codebuild-ssm-policy"
+  name = "${var.function_prefix}-${var.environment}-codebuild-ssm-policy"
   role = aws_iam_role.codebuild_role.id
   policy = templatefile("${path.module}/ssm-role-policy-template.json", {
     aws_account_number = var.aws_account_number,
     region             = var.region,
-    environment        = var.stage,
+    environment        = var.environment,
     function_prefix    = var.function_prefix
     kms_key_arn        = var.kms_key_arn
   })
 }
 
 resource "aws_iam_role_policy" "codebuild_policy_4" {
-  name = "${var.function_prefix}-${var.stage}-remote-codebuild-policy"
+  name = "${var.function_prefix}-${var.environment}-remote-codebuild-policy"
   role = aws_iam_role.codebuild_role.id
   policy = templatefile("${path.module}/codebuild-cross-account-template.json", {
     remote_account      = var.remote_account_id
@@ -100,17 +100,17 @@ data "aws_iam_policy_document" "codebuild_vpc_policy" {
 }
 
 resource "aws_iam_role_policy" "codebuild_vpc_access" {
-  name   = "${var.function_prefix}-${var.stage}-codebuild-vpc"
+  name   = "${var.function_prefix}-${var.environment}-codebuild-vpc"
   role   = aws_iam_role.codebuild_role.id
   policy = data.aws_iam_policy_document.codebuild_vpc_policy.json
 }
 
 # CodeBuild Cache Bucket
 resource "aws_s3_bucket" "function_codebuild_cache" {
-  bucket = "${var.function_prefix}-${var.stage}-codebuild-cache"
+  bucket = "${var.function_prefix}-${var.environment}-codebuild-cache"
 
   tags = { 
-    Name = "${var.function_name} ${var.stage} CodeBuild cache" 
+    Name = "${var.function_name} ${var.environment} CodeBuild cache" 
   }
 }
 
@@ -127,7 +127,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "function_codebuil
 
 # CodeBuild Project
 resource "aws_codebuild_project" "codebuild_project" {
-  name         = "${var.function_prefix}-${var.stage}-codebuild-project"
+  name         = "${var.function_prefix}-${var.environment}-codebuild-project"
   service_role = aws_iam_role.codebuild_role.arn
 
   artifacts {
@@ -136,7 +136,7 @@ resource "aws_codebuild_project" "codebuild_project" {
 
   cache {
     type     = "S3"
-    location = "${var.function_prefix}-${var.stage}-codebuild-cache"
+    location = "${var.function_prefix}-${var.environment}-codebuild-cache"
   }
 
   environment {
