@@ -22,6 +22,10 @@ variable "environment" {
   description = "Environment name"
 }
 
+vaible "stage" {
+  description = "codebuild stage name"
+}
+
 variable "environment_image" {
   description = "Which Docker image to use as your build environment"
   type        = string
