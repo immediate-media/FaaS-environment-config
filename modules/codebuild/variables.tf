@@ -22,7 +22,7 @@ variable "environment" {
   description = "Environment name"
 }
 
-vaible "stage" {
+variable "stage" {
   description = "codebuild stage name"
 }
 
