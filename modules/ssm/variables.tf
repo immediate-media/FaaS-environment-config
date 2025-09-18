@@ -10,10 +10,6 @@ variable "region" {
   description = "The AWS Region to create the lambda function in"
 }
 
-variable "platform" {
-  description = "Platform identifier."
-}
-
 variable "environment" {
   description = "Environment name"
 }
@@ -25,4 +21,10 @@ variable "use_api_auth" {
 variable "api_auth_token" {
   description = "The value of the API authentication key"
   default     = ""
+}
+
+variable "mandatory_tags" {
+  description = "Standard tags applied to all resources"
+  type        = map(string)
+  default     = null
 }

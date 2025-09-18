@@ -7,6 +7,10 @@ provider "github" {
 resource "aws_iam_role" "codepipeline_role" {
   name               = "${var.function_prefix}-${var.environment}-codepipeline-role"
   assume_role_policy = file("${path.module}/codepipeline-role-policy-template.json")
+
+  tags = merge(var.mandatory_tags, {
+    Name = "${var.function_prefix}-${var.environment}-codepipeline-role"
+  })
 }
 
 resource "aws_iam_role_policy" "pipeline_policy" {
@@ -40,6 +44,10 @@ resource "aws_codepipeline_webhook" "codepipeline_webhook" {
     json_path    = "$.ref"
     match_equals = "refs/heads/${var.github_branch}"
   }
+
+  tags = merge(var.mandatory_tags, {
+    Name = "${var.function_prefix}-${var.environment}-codepipeline-webhook"
+  })
 }
 
 # GitHub Webhook
@@ -107,4 +115,8 @@ resource "aws_codepipeline" "codepipeline_project" {
       }
     }
   }
+
+  tags = merge(var.mandatory_tags, {
+    Name = "${var.function_prefix}-${var.environment}-codepipeline"
+  })
 }
