@@ -20,7 +20,7 @@ variable "environment" {
 
 variable "stage" {
   description = "codebuild stage name"
-  default = null
+  default     = null
 }
 
 variable "environment_image" {
