@@ -173,3 +173,14 @@ variable "environment_3" {
   type        = string
   description = "Environment name prod"
 }
+
+variable "mandatory_tags" {
+  description = "Standard tags applied to all resources"
+  type        = map(string)
+  default     = null
+}
+
+variable "codestar_connection_arn" {
+  type        = string
+  description = "Codestar_connection_arn"
+}

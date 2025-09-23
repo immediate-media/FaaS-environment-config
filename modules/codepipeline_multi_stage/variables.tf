@@ -10,10 +10,6 @@ variable "region" {
   description = "The AWS Region to create the lambda function in"
 }
 
-variable "platform" {
-  description = "Platform identifier."
-}
-
 variable "environment_1" {
   description = "Environment name stage/dev"
 }
@@ -93,4 +89,10 @@ variable "disable_integration_test" {
 variable "disable_integration_II_test" {
   description = "Disable Integration II Test Stage"
   default     = true
+}
+
+variable "mandatory_tags" {
+  description = "Standard tags applied to all resources"
+  type        = map(string)
+  default     = null
 }

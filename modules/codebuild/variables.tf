@@ -14,12 +14,13 @@ variable "region" {
   description = "The AWS Region to create the lambda function in"
 }
 
-variable "platform" {
-  description = "Platform identifier."
-}
-
 variable "environment" {
   description = "Environment name"
+}
+
+variable "stage" {
+  description = "codebuild stage name"
+  default     = null
 }
 
 variable "environment_image" {
@@ -81,4 +82,10 @@ variable "vpc_id" {
 variable "public_security_group_id" {
   description = "Generated from configured security groups, common reference as aws_security_group.outbound.id"
   default     = ""
+}
+
+variable "mandatory_tags" {
+  description = "Standard tags applied to all resources"
+  type        = map(string)
+  default     = null
 }

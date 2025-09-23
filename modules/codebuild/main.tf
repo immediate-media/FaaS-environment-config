@@ -2,11 +2,10 @@
 resource "aws_iam_role" "codebuild_role" {
   name               = "${var.function_prefix}-${var.environment}-codebuild-role"
   assume_role_policy = file("${path.module}/codebuild-role-template.json")
-  tags = {
-    Platform = var.platform
-    Env      = var.environment
-    Service  = var.function_name
-  }
+
+  tags = merge(var.mandatory_tags, {
+    Name = "${var.function_prefix}-${var.environment}-codebuild-role"
+  })
 }
 
 # IAM polices
@@ -29,9 +28,8 @@ resource "aws_iam_role_policy" "codebuild_policy_2" {
 
 resource "aws_iam_role_policy" "codebuild_policy_3" {
   count = var.use_api_auth ? 1 : 0
-
-  name = "${var.function_prefix}-${var.environment}-codebuild-ssm-policy"
-  role = aws_iam_role.codebuild_role.id
+  name  = "${var.function_prefix}-${var.environment}-codebuild-ssm-policy"
+  role  = aws_iam_role.codebuild_role.id
   policy = templatefile("${path.module}/ssm-role-policy-template.json", {
     aws_account_number = var.aws_account_number,
     region             = var.region,
@@ -114,11 +112,9 @@ resource "aws_iam_role_policy" "codebuild_vpc_access" {
 resource "aws_s3_bucket" "function_codebuild_cache" {
   bucket = "${var.function_prefix}-${var.environment}-codebuild-cache"
 
-  tags = {
-    Name        = "${var.function_name} ${var.environment} CodeBuild cache"
-    Platform    = var.platform
-    Environment = var.environment
-  }
+  tags = merge(var.mandatory_tags, {
+    Name = "${var.function_name} ${var.environment} CodeBuild cache"
+  })
 }
 
 resource "aws_s3_bucket_server_side_encryption_configuration" "function_codebuild_cache" {
@@ -166,12 +162,6 @@ resource "aws_codebuild_project" "codebuild_project" {
     type      = "CODEPIPELINE"
     buildspec = var.buildspec_name
   }
-  tags = {
-    Platform = var.platform
-    Env      = var.environment
-    Service  = var.function_name
-  }
-
   # include the vpc config if the vpc_id is set
   dynamic "vpc_config" {
     for_each = var.vpc_id != "" ? [1] : []
@@ -184,4 +174,7 @@ resource "aws_codebuild_project" "codebuild_project" {
     }
   }
 
+  tags = merge(var.mandatory_tags, {
+    Name = "${var.function_prefix}-${var.environment}-codebuild-project"
+  })
 }

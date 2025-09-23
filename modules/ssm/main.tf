@@ -12,37 +12,28 @@ resource "random_password" "api_auth_token" {
 }
 
 resource "aws_kms_key" "kms_key" {
-  count = var.use_api_auth ? 1 : 0
-
+  count       = var.use_api_auth ? 1 : 0
   description = var.function_name
 
-  tags = {
-    Name     = "${var.function_name} ${var.environment} API Key"
-    Platform = var.platform
-    Env      = var.environment
-    Service  = var.function_name
-  }
+  tags = merge(var.mandatory_tags, {
+    Name = "${var.function_name} ${var.environment} API Key"
+  })
 }
 
 resource "aws_kms_alias" "kms_alias" {
-  count = var.use_api_auth ? 1 : 0
-
+  count         = var.use_api_auth ? 1 : 0
   name          = "alias/${var.function_prefix}-${var.environment}"
   target_key_id = aws_kms_key.kms_key[0].key_id
 }
 
 resource "aws_ssm_parameter" "ssm_ps_prod" {
-  count = var.use_api_auth ? 1 : 0
-
+  count  = var.use_api_auth ? 1 : 0
   name   = "${var.function_prefix}-${var.environment}-rest-api-key"
   type   = "SecureString"
   key_id = aws_kms_key.kms_key[0].arn
   value  = local.api_auth_token
 
-  tags = {
-    Name     = "${var.function_name} ${var.environment} API Key"
-    Platform = var.platform
-    Env      = var.environment
-    Service  = var.function_name
-  }
+  tags = merge(var.mandatory_tags, {
+    Name = "${var.function_prefix}-${var.environment}-rest-api-key"
+  })
 }

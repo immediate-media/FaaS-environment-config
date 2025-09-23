@@ -10,10 +10,6 @@ variable "region" {
   description = "The AWS Region to create the lambda function in"
 }
 
-variable "platform" {
-  description = "Platform identifier."
-}
-
 variable "environment" {
   description = "Environment name"
 }
@@ -52,4 +48,10 @@ variable "webhook_secret" {
 
 variable "webhook_ip_range" {
   description = "A list of IPs allowed to trigger the webhook"
+}
+
+variable "mandatory_tags" {
+  description = "Standard tags applied to all resources"
+  type        = map(string)
+  default     = null
 }

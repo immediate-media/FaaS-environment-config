@@ -7,6 +7,10 @@ provider "github" {
 resource "aws_iam_role" "codepipeline_role" {
   name               = "${var.function_prefix}-codepipeline-role"
   assume_role_policy = file("${path.module}/codepipeline-role-policy-template.json")
+
+  tags = merge(var.mandatory_tags, {
+    Name = "${var.function_prefix}-codepipeline-role"
+  })
 }
 
 resource "aws_iam_role_policy" "pipeline_policy" {
@@ -40,6 +44,10 @@ resource "aws_codepipeline_webhook" "codepipeline_webhook" {
     json_path    = "$.ref"
     match_equals = "refs/heads/${var.github_branch}"
   }
+
+  tags = merge(var.mandatory_tags, {
+    Name = "${var.function_prefix}-codepipeline-webhook"
+  })
 }
 
 # GitHub Webhook
@@ -60,10 +68,9 @@ resource "github_repository_webhook" "github_webhook" {
 resource "aws_s3_bucket" "function_codepipeline_source_packages" {
   bucket = "${var.function_prefix}-codepipeline-source-packages"
 
-  tags = {
-    Name     = "${var.function_name} CodePipeline source packages"
-    Platform = var.platform
-  }
+  tags = merge(var.mandatory_tags, {
+    Name = "${var.function_prefix}-codepipeline-source-packages"
+  })
 }
 
 resource "aws_s3_bucket_server_side_encryption_configuration" "function_codepipeline_source_packages" {
@@ -245,4 +252,8 @@ resource "aws_codepipeline" "codepipeline_project" {
       }
     }
   }
+
+  tags = merge(var.mandatory_tags, {
+    Name = "${var.function_prefix}-codepipeline"
+  })
 }

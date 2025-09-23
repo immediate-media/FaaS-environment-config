@@ -26,3 +26,9 @@ variable "use_api_auth" {
 variable "kms_key_arn" {
   description = "The key used for decrypting secrets from secrets manager"
 }
+
+variable "mandatory_tags" {
+  description = "Standard tags applied to all resources"
+  type        = map(string)
+  default     = null
+}
