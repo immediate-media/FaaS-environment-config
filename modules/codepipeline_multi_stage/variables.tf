@@ -96,3 +96,15 @@ variable "mandatory_tags" {
   type        = map(string)
   default     = null
 }
+
+variable "load_test_stage" {
+  description = "Enable load test stage"
+  type        = bool
+  default     = false
+}
+
+variable "load_test_environment" {
+  description = "The environment to run load tests against"
+  type        = string
+  default     = "staging"
+}

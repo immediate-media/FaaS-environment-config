@@ -3,6 +3,11 @@ provider "github" {
   owner = "immediate-media"
 }
 
+locals {
+  platform               = var.mandatory_tags != null ? lookup(var.mandatory_tags, "Platform", "wcp-services") : "wcp-services"
+  load_test_project_name = var.load_test_environment == "staging" ? "${local.platform}-loadtest-staging" : "${local.platform}-loadtest"
+}
+
 # IAM Role
 resource "aws_iam_role" "codepipeline_role" {
   name               = "${var.function_prefix}-codepipeline-role"
@@ -113,6 +118,25 @@ resource "aws_codepipeline" "codepipeline_project" {
         BranchName       = var.github_branch
       }
     }
+
+    dynamic "action" {
+      for_each = var.load_test_stage ? [1] : []
+      content {
+        category         = "Source"
+        owner            = "AWS"
+        provider         = "CodeStarSourceConnection"
+        version          = "1"
+        name             = "LoadTestSource"
+        output_artifacts = ["wcp-services-loadtest-artifact"]
+
+        configuration = {
+          BranchName           = "master"
+          ConnectionArn        = var.codestar_connection_arn
+          FullRepositoryId     = "immediate-media/wcp-services-load-test"
+          OutputArtifactFormat = "CODEBUILD_CLONE_REF"
+        }
+      }
+    }
   }
 
   dynamic "stage" {
@@ -155,6 +179,36 @@ resource "aws_codepipeline" "codepipeline_project" {
         configuration = {
           ProjectName   = "${var.function_prefix}-${var.environment_1}-codebuild-project"
           PrimarySource = "source_output"
+        }
+      }
+    }
+  }
+
+  dynamic "stage" {
+    for_each = var.load_test_stage ? [1] : []
+    content {
+      name = "Load-Test"
+
+      action {
+        category        = "Test"
+        owner           = "AWS"
+        provider        = "CodeBuild"
+        version         = "1"
+        name            = "LoadTests"
+        input_artifacts = ["wcp-services-loadtest-artifact"]
+
+        configuration = {
+          ProjectName = local.load_test_project_name
+          EnvironmentVariables = jsonencode([
+            {
+              name  = "SERVICE"
+              value = var.function_prefix
+            },
+            {
+              name  = "ENVIRONMENT"
+              value = var.load_test_environment
+            }
+          ])
         }
       }
     }
