@@ -4,8 +4,8 @@ provider "github" {
 }
 
 locals {
-  platform               = var.mandatory_tags != null ? lookup(var.mandatory_tags, "Platform", "wcp-services") : "wcp-services"
-  load_test_project_name = var.load_test_environment == "staging" ? "${local.platform}-loadtest-staging" : "${local.platform}-loadtest"
+  platform = lookup(var.mandatory_tags, "Platform", "wcp-services")
+  load_test = var.load_test_environment == "staging" ? "${local.platform}-loadtest-staging" : "${local.platform}-loadtest"
 }
 
 # IAM Role
