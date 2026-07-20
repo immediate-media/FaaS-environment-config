@@ -184,3 +184,27 @@ variable "codestar_connection_arn" {
   type        = string
   description = "Codestar_connection_arn"
 }
+
+variable "load_test_stage" {
+  type        = bool
+  description = "Enable load test stage"
+  default     = false
+}
+
+variable "load_test_environment" {
+  type        = string
+  description = "The environment to run load tests against"
+  default     = "staging"
+}
+
+variable "load_test_stage" {
+  type        = bool
+  description = "Enable load test stage"
+  default     = false
+}
+
+variable "load_test_environment" {
+  type        = string
+  description = "The environment to run load tests against"
+  default     = "staging"
+}
