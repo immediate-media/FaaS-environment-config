@@ -77,6 +77,8 @@ module "codepipeline_ms" {
   component_name_2        = var.component_name_2
   component_name_3        = var.component_name_3
   mandatory_tags          = var.mandatory_tags
+  load_test_stage         = var.load_test_stage
+  load_test_environment   = var.load_test_environment
 }
 
 ###########
